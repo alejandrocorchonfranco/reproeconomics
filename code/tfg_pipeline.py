@@ -1,47 +1,4 @@
 #!/usr/bin/env python3
-"""
-TFG pipeline unificado
-======================
-
-Consolidación y depuración de los notebooks del TFG en un único script reproducible.
-
-Qué incluye
------------
-1) Preparación y fusión de las bases de fertilidad y macroeconomía.
-2) Interrupted Time Series (ITS) con y sin controles macroeconómicos.
-3) Gráficos de ajuste / contrafactual para las variables demográficas principales.
-4) Event-study posterior a la intervención.
-5) Figuras del análisis económico corregido:
-   - mapa bidimensional de sensibilidad del coste por nacimiento adicional
-   - tornado de sensibilidad univariante
-   - impacto presupuestario
-   - utilización por quintiles
-   - curvas de concentración
-
-Qué se ha depurado
-------------------
-- Cargas repetidas del mismo CSV/XLSX con distintos separadores.
-- Celdas exploratorias y redefiniciones redundantes.
-- Dependencia del estado interno del notebook.
-- Valores “fallback” pegados manualmente en celdas intermedias.
-- Mezcla de castellano/inglés en nombres de variables y bloques.
-
-Este archivo es una reconstrucción limpia basada sobre todo en:
-- TFG-Fifth run.ipynb
-- Gráficas del análisis económico.ipynb
-
-Uso
----
-python tfg_pipeline_unificado.py \
-    --fertility BBDD_fertilidad.xlsx \
-    --macro BBDD_macro.csv \
-    --outdir outputs_tfg
-
-Dependencias
-------------
-pip install pandas numpy matplotlib statsmodels scipy openpyxl
-"""
-
 from __future__ import annotations
 
 import argparse
