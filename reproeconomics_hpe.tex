@@ -19,8 +19,8 @@
 \usepackage{textcomp,eurosym,newunicodechar}
 \usepackage{titlesec}
 
-% Tables
-\usepackage{booktabs,array,tabularx,threeparttable,makecell,adjustbox}
+% Tables (rotating needed for sidewaystable)
+\usepackage{booktabs,array,tabularx,threeparttable,makecell,adjustbox,rotating}
 
 % Page layout -- double spacing, min 2.5 cm margins
 \geometry{margin=2.5cm}
@@ -41,13 +41,16 @@
 % Hyperref
 \hypersetup{hidelinks,breaklinks=true}
 
-% Paragraph formatting
+% Paragraph and float spacing
 \setlength{\parindent}{1.25em}
 \setlength{\parskip}{0.25em}
-\setlength{\textfloatsep}{16pt plus 2pt minus 2pt}
+\setlength{\textfloatsep}{18pt plus 3pt minus 3pt}
+\setlength{\floatsep}{12pt plus 2pt minus 2pt}
+\setlength{\intextsep}{14pt plus 2pt minus 2pt}
 
 % Caption setup
-\captionsetup{font=small,labelfont=bf,justification=justified,singlelinecheck=false}
+\captionsetup{font=small,labelfont=bf,justification=justified,
+              singlelinecheck=false,skip=4pt}
 
 % Header/footer
 \pagestyle{fancy}
@@ -151,8 +154,8 @@ the case for extending that logic to elective OC rests either on
 equity grounds---reducing the large socioeconomic gradient in private
 access documented by \citet{alonpinilla2021}---or on fiscal grounds,
 namely that additional births financed by the programme will generate a
-positive net return to the public purse. Assessing the fiscal
-dimension rigorously is the purpose of this paper.
+positive net return to the public purse. Assessing the fiscal dimension
+rigorously is the purpose of this paper.
 
 This paper provides an economic evaluation of publicly funded elective
 OC as proposed within the Spanish national policy debate. Specifically,
@@ -171,9 +174,7 @@ Section~\ref{sec:literature} reviews the relevant literature.
 Section~\ref{sec:model} describes the cost-effectiveness model.
 Section~\ref{sec:results} presents the results.
 Section~\ref{sec:discussion} discusses the findings and their policy
-implications. Tables and figures appear at the end of the manuscript;
-Appendix~\ref{app:decisiontree} contains the decision-tree
-representation of the model.
+implications.
 
 % -----------------------------------------------------------------------
 \section{Literature Review}\label{sec:literature}
@@ -321,33 +322,26 @@ $< 35$), compared to 72\% if fifteen or more mature oocytes are
 obtained. \citet{chronopoulou2021} document that live birth rates per
 vitrified oocyte decline sharply with age. The frequently reported
 average success rate of 28.7\% therefore substantially overestimates
-outcomes for women who freeze fewer than ten oocytes or who do so after
-age 37, which is the modal profile of elective users. A success rate of
+outcomes for women who freeze fewer than ten oocytes or after age 37,
+which is the modal profile of elective users. A success rate of
 $s = 0.30$ is adopted for the base case, with sensitivity analysis
 extended to the range $[0.20,\,0.40]$.
 
 The demographic additionality parameter $\alpha$---the share of
 OC-assisted births that would not have occurred by any other means---is
-the most uncertain parameter in the model and cannot be directly
-observed. It is bounded by three considerations drawn from the
-available evidence. First, women who use their stored oocytes may have
-conceived naturally or via other ART in the absence of the programme,
-in which case the OC-assisted birth does not represent a net increase
-in completed fertility. Second, the consistently low return-to-use
-rates documented across multiple cohort studies imply that the scope
-for additional births is limited to a small fraction of programme
-participants; at the population level, OC generates one live birth per
-approximately 33 women who freeze at the best-documented utilisation
-and success rates. Third, qualitative and survey evidence consistently
-indicates that elective OC is used predominantly as reproductive
+the most uncertain parameter in the model. It is bounded by three
+considerations. First, women who use their stored oocytes may have
+conceived naturally or via other ART in the absence of the programme.
+Second, the consistently low return-to-use rates imply that OC
+generates one live birth per approximately 33 women who freeze at the
+best-documented utilisation and success rates, limiting the scope for
+net additional births. Third, qualitative and survey evidence
+consistently indicates that OC is used predominantly as reproductive
 insurance---an option that reduces anxiety rather than enabling births
-that would not otherwise occur \citep{kynigopoulou2024,gambadauro2023}.
-These considerations support $\alpha \in [0.30,\,0.50]$ as the base
-case, with sensitivity extended to $[0.20,\,0.70]$.
-
-Table~\ref{tab:parameters} summarises all model parameters, base-case
-values, and sensitivity ranges (see tables at the end of the
-manuscript).
+that would not otherwise occur
+\citep{kynigopoulou2024,gambadauro2023}. These three considerations
+support $\alpha \in [0.30,\,0.50]$ as the base case, with sensitivity
+extended to $[0.20,\,0.70]$.
 
 \subsection{Cost per additional live birth and fiscal
 sustainability}\label{sec:cost}
@@ -365,14 +359,10 @@ additionality factor. The expected cost per additional live birth is
 
 \noindent The numerator is the total expected public expenditure per
 woman who freezes: the fixed vitrification cost plus the expected
-thaw-and-transfer cost incurred by the fraction $u$ who return to use
-their oocytes. The denominator is the expected number of additional
-live births per woman who freezes, equal to the product of utilisation
-rate, clinical success rate, and additionality factor. A public
-programme is fiscally self-sustaining if and only if the expected cost
-per additional birth does not exceed the net fiscal contribution (NFC)
-of the additional individual over the life cycle. The fiscal
-self-sustainability condition is
+thaw-and-transfer cost incurred by the fraction $u$ who return. The
+denominator is the expected number of additional live births per woman
+who freezes. A programme is fiscally self-sustaining if and only if the
+expected cost per additional birth does not exceed the NFC:
 
 \begin{equation}
 u\,s\,\alpha \;\geq\; \frac{C_u + u\,C_T}{\mathrm{NFC}}.
@@ -380,11 +370,74 @@ u\,s\,\alpha \;\geq\; \frac{C_u + u\,C_T}{\mathrm{NFC}}.
 \end{equation}
 
 \noindent Because $u$ appears on both sides, this condition is
-nonlinear in $u$ and must be evaluated numerically. At the
-inflation-adjusted NFC of \euro{}91,391 (2023 prices), with $C_u =
-\euro{}5{,}000$ and $C_T = \euro{}2{,}500$, the required
-break-even product $u\,s\,\alpha$ can be calculated for any pair of
-clinical and behavioural assumptions.
+nonlinear and must be evaluated numerically. At the inflation-adjusted
+NFC of \euro{}91,391 (2023 prices), the required break-even product
+$u\,s\,\alpha$ can be calculated for any combination of clinical and
+behavioural assumptions. Table~\ref{tab:parameters} summarises all
+model parameters, their role in the cost equations, base-case values,
+and sensitivity ranges.
+
+\begin{sidewaystable}[p]
+\centering
+\caption{Model parameters: roles, base-case values, and sensitivity
+ranges}
+\label{tab:parameters}
+\begin{threeparttable}
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{llcccl}
+\toprule
+Parameter & Symbol &
+\makecell{Role in\\Eq. (1)--(2)} &
+\makecell{Base\\case} &
+\makecell{Sensitivity\\range} &
+Calibration basis \\
+\midrule
+\multicolumn{6}{l}{\textit{Panel A --- Cost inputs}} \\[2pt]
+\quad Vitrification cycle, incl.\ 5-yr storage (\euro{}) &
+$C_u$ & Numerator, fixed & 5,000 & 4,000--6,000 &
+\citet{sef2024registro}; SEF market prices 2023 \\
+\quad Thaw-and-transfer IVF cycle (\euro{}) &
+$C_T$ & Numerator, variable & 2,500 & 2,000--3,000 &
+\citet{matorras2001}; \citet{navarro2006} \\[6pt]
+\multicolumn{6}{l}{\textit{Panel B --- Effectiveness parameters}} \\[2pt]
+\quad Utilisation rate (share who return to use oocytes) &
+$u$ & Denominator, primary driver & 0.08 & 0.05--0.20 &
+\citet{yang2022} (8.4\%); \citet{cobo2018} (12.1\%);
+\citet{trokoudes2011} (5\%) \\
+\quad Clinical success rate per thaw cycle &
+$s$ & Denominator & 0.30 & 0.20--0.40 &
+\citet{cobo2016}; \citet{chronopoulou2021} \\
+\quad Demographic additionality factor &
+$\alpha$ & Denominator, fiscal scope & 0.50 & 0.20--0.70 &
+Calibrated from utilisation and insurance evidence \\[6pt]
+\multicolumn{6}{l}{\textit{Panel C --- Fiscal benchmark}} \\[2pt]
+\quad Net fiscal contribution per additional birth (\euro{}, 2023) &
+NFC & Break-even threshold (Eq.~2) & 91,391 & 66,709--94,510 &
+\citet{matorras2016}; INE IPCSNA deflator\\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}[flushleft]
+\footnotesize
+\item[a] The cost per additional birth from Equation~\eqref{eq:cost}
+at base-case values is \euro{}433,333. The fiscal
+self-sustainability condition (Equation~\eqref{eq:fiscal}) requires
+this not to exceed the NFC; at base-case parameters the fiscal return
+is approximately \euro{}0.21 per euro spent.
+\item[b] All cost values in 2023 euros. The NFC of \euro{}91,391 is
+the 2006 value of \euro{}66,709 from \citet{matorras2016} adjusted
+upward by the INE IPCSNA healthcare cost deflator ($+37\%$,
+2006--2023). The sensitivity range spans the uninflated 2006 value
+(\euro{}66,709) to the naturally conceived individual NFC
+(\euro{}94,510) from the same source.
+\item[c] The utilisation range (0.05--0.20) brackets the empirical
+estimates in the cohort literature: 5\% \citep{trokoudes2011},
+8.4\% \citep{yang2022}, 12.1\% \citep{cobo2018}, and 20\% as an
+optimistic upper bound. The 20\% upper bound has not been observed in
+any published cohort and should be treated as a scenario rather than a
+projection.
+\end{tablenotes}
+\end{threeparttable}
+\end{sidewaystable}
 
 % -----------------------------------------------------------------------
 \section{Results}\label{sec:results}
@@ -403,26 +456,70 @@ the fiscal return falls to approximately \euro{}0.09 per euro,
 implying a structural fiscal loss of more than \euro{}0.91 per euro of
 public expenditure.
 
-Figure~\ref{fig:cost_sensitivity} presents a bidimensional sensitivity
-analysis over the plausible ranges of $u$ and $s$ with $\alpha$ held
-at 0.50. Costs range from \euro{}137,500 (optimistic: $u = 0.20$,
-$s = 0.40$) to above \euro{}1,000,000 (pessimistic: $u = 0.05$,
-$s = 0.20$). At no point in the plausible parameter space does the
-cost per birth fall below the \euro{}91,391 inflation-adjusted NFC.
-In the empirical utilisation range (5--12\%), the cost per additional
-birth lies between \euro{}433,333 and \euro{}683,333, far exceeding any
-defensible willingness-to-pay threshold for a publicly funded
-pro-natalist intervention.
+Figure~\ref{fig:cost_sensitivity} maps the full cost surface across
+the plausible ranges of utilisation rate and success rate. Costs range
+from \euro{}137,500 (optimistic: $u = 0.20$, $s = 0.40$) to above
+\euro{}1,000,000 (pessimistic: $u = 0.05$, $s = 0.20$). At no point
+in the plausible parameter space does the cost per birth fall below the
+\euro{}91,391 inflation-adjusted NFC. In the empirical utilisation
+range (5--12\%), the cost per additional birth lies between
+\euro{}433,333 and \euro{}683,333.
+
+\begin{figure}[htbp]
+\centering
+\caption{Cost per additional live birth: sensitivity to utilisation rate
+and success rate}
+\label{fig:cost_sensitivity}
+\includegraphics[width=0.88\textwidth]{media/media/image9.png}
+\caption*{\footnotesize\textit{Note:} The surface plots the cost per
+additional live birth (Equation~\eqref{eq:cost}) as a function of the
+utilisation rate ($u$) and the success rate per thaw cycle ($s$), with
+the additionality factor fixed at $\alpha = 0.50$. The flat horizontal
+plane marks the inflation-adjusted net fiscal contribution of
+\euro{}91,391---the break-even threshold below which the programme
+would be fiscally self-sustaining. The entire cost surface lies above
+this plane across the plausible parameter space: no combination of $u$
+and $s$ consistent with the empirical evidence yields fiscal
+self-sustainability. At the empirical midpoint ($u = 0.08$,
+$s = 0.30$), the cost per additional birth is \euro{}433,333.
+Values in 2023 euros.\\
+\textit{Source:} Author's calculations.}
+\end{figure}
 
 \FloatBarrier
 
-The deterministic sensitivity analysis in Figure~\ref{fig:tornado}
-confirms that the utilisation rate $u$ is by far the primary
-uncertainty driver: varying $u$ from 5\% to 20\% alone shifts the
-cost per birth by more than \euro{}500,000, dwarfing the sensitivity
-to any other parameter. The additionality factor $\alpha$ and the
-success rate $s$ are the next most influential parameters; cost inputs
-($C_u$, $C_T$) have comparatively modest effects.
+The deterministic sensitivity analysis confirms that the utilisation
+rate $u$ is by far the primary uncertainty driver:
+Figure~\ref{fig:tornado} shows that varying $u$ from 5\% to 20\% alone
+shifts the cost per birth by more than \euro{}500,000, dwarfing the
+sensitivity to any other parameter. This reflects the structure of
+Equation~\eqref{eq:cost}: programme expenditure is fixed per freezer
+($C_u$ is paid regardless of whether oocytes are ever used), but
+additional births are a small fraction of all freezers, so small
+changes in $u$ generate large changes in cost per birth. The
+additionality factor $\alpha$ and the success rate $s$ are the next
+most influential parameters; cost inputs ($C_u$, $C_T$) have
+comparatively modest effects.
+
+\begin{figure}[htbp]
+\centering
+\caption{Drivers of uncertainty in the cost per additional live birth:
+deterministic sensitivity analysis}
+\label{fig:tornado}
+\includegraphics[width=0.88\textwidth]{media/media/image10.png}
+\caption*{\footnotesize\textit{Note:} Each bar shows the variation in
+cost per additional live birth when one parameter at a time is moved
+from its lower to its upper sensitivity bound
+(Table~\ref{tab:parameters}), holding all other parameters at
+base-case values. The utilisation rate ($u$) dominates: programme
+expenditure is fixed per freezer but births are a small fraction of
+freezers. The dashed vertical line shows the base-case estimate
+(\euro{}433,333); the dotted line shows the NFC break-even threshold
+(\euro{}91,391). Because no bar's lower bound dips below the NFC
+threshold, no single-parameter optimistic assumption is sufficient to
+achieve fiscal self-sustainability. Values in 2023 euros.\\
+\textit{Source:} Author's calculations.}
+\end{figure}
 
 \FloatBarrier
 
@@ -440,19 +537,40 @@ margin at any empirically plausible parameter combination.
 \subsection{Budget impact}\label{sec:budget}
 
 Spain has approximately 1.8 million women aged 30--35
-\citep{ine2023}. Figure~\ref{fig:budget_scenarios} illustrates three
-uptake scenarios and the corresponding annual budgetary commitment. At
-5\% uptake, nearly 90,000 women would freeze annually; at the stated
-vitrification cost of \euro{}5,000 per cycle, gross vitrification
-expenditure alone amounts to \euro{}450M per year. Adding expected
-thaw-and-transfer costs (approximately \euro{}18M at 8\% utilisation
-and \euro{}2,500 per cycle) and administration (\euro{}2M), annual
-programme costs total approximately \euro{}470M. Under a 10\% uptake
-scenario, annual costs reach approximately \euro{}938M; at 20\%
+\citep{ine2023}. At 5\% uptake, nearly 90,000 women would freeze
+annually; at the stated vitrification cost of \euro{}5,000 per cycle,
+gross vitrification expenditure alone amounts to \euro{}450M per year.
+Adding expected thaw-and-transfer costs (approximately \euro{}18M at
+8\% utilisation and \euro{}2,500 per cycle) and administration
+(\euro{}2M), annual programme costs total approximately \euro{}470M. At
+10\% uptake, annual costs reach approximately \euro{}938M; at 20\%
 uptake, they exceed \euro{}1.87Bn, equivalent to nearly 2.3\% of total
 Spanish public health expenditure \citep{minsan2024}. Adverse event
-costs (Section~\ref{sec:adverse}) are excluded from these estimates
-and would add a further 5--8\% to direct procedure costs.
+costs (Section~\ref{sec:adverse}) are excluded and would add a further
+5--8\% to direct procedure costs.
+
+\begin{figure}[htbp]
+\centering
+\caption{Annual programme cost under alternative uptake scenarios
+(2023 euros)}
+\label{fig:budget_scenarios}
+\includegraphics[width=0.88\textwidth]{media/media/image11.png}
+\caption*{\footnotesize\textit{Note:} Annual programme costs for three
+uptake scenarios among Spain's approximately 1.8 million women aged
+30--35 \citep{ine2023}. Costs include vitrification (\euro{}5,000 per
+cycle), expected thaw-and-transfer procedures (\euro{}2,500 per cycle,
+applied to 8\% of freezers), and administration. Adverse event costs
+are excluded and would add a further 5--8\%. The horizontal reference
+line marks Spain's current annual family and child policy expenditure
+of approximately \euro{}1.9Bn \citep{oecd2024}: even the minimum (5\%)
+scenario consumes roughly 25\% of that budget for a programme that
+fails fiscal self-sustainability under all parameter combinations.
+Values in 2023 euros.\\
+\textit{Source:} Author's calculations based on SEF (2024) and
+Ministerio de Sanidad (2024).}
+\end{figure}
+
+\FloatBarrier
 
 These figures warrant explicit comparison with alternative uses of
 public funds. Spain currently spends around \euro{}1.9Bn annually on
@@ -465,37 +583,82 @@ scenario would consume approximately \euro{}470M per year---equivalent
 to roughly 25\% of Spain's entire annual family and child policy
 budget---for a programme whose cost per additional birth exceeds the
 per-birth net fiscal contribution under all empirically plausible
-parameter values. This opportunity cost should be a key factor in any
-policy cost-benefit assessment.
+parameter values.
 
 \subsection{Distributional analysis and programme design}\label{sec:distributive}
 
 The distributive implications of public funding depend on the economic
 profile of existing private users and the design of the public
 programme. Figure~\ref{fig:quintiles} shows estimated OC utilisation
-rates by income quintile in the current private market and under two
+rates by income quintile under the current private market and two
 alternative public funding designs, calibrated on the access gradients
 documented by \citet{alonpinilla2021} and \citet{seiz2023}. The
 statistics expose a sharply pro-rich profile in the current private
 market: the estimated utilisation rate in the top income quintile is
-approximately fourteen times that of the bottom quintile. A universal
-public subsidy reduces this gradient but does not eliminate it, given
-that informational barriers, geographic access, and cultural attitudes
-towards ART are consistently associated with socioeconomic status. A
-means-tested subsidy restricted to income quintiles Q1--Q3 achieves a
-near-neutral distribution of programme gains while substantially
-reducing the fiscal burden.
+approximately fourteen times that of the bottom quintile, reflecting
+price barriers and informational inequalities that do not disappear
+with a universal subsidy.
 
-Figure~\ref{fig:concentration} shows the corresponding concentration
-curves \citep{kakwani1977}. The private market yields a concentration
-index of approximately 0.42, strongly pro-rich, calibrated on Spanish
-income quintile shares (World Bank WDI 2023) and the Q5/Q1 access
-gradient of 14 \citep{alonpinilla2021}. Universal public funding
-reduces this to approximately 0.18; means-tested funding approaches
-distributional neutrality (concentration index $\approx 0.05$). If the
-declared goal of public OC funding is to improve equity of
-reproductive access, a means-tested instrument is clearly preferable
-on both efficiency and equity grounds.
+\begin{figure}[htbp]
+\centering
+\caption{OC utilisation rates by income quintile: current private
+market and two public funding designs}
+\label{fig:quintiles}
+\includegraphics[width=0.88\textwidth]{media/media/image12.png}
+\caption*{\footnotesize\textit{Note:} Estimated annual OC utilisation
+rates (share of women in each income quintile who undergo
+vitrification) under three institutional arrangements, calibrated on
+the income gradients in ART access documented by
+\citet{alonpinilla2021} and \citet{seiz2023}. Under the current
+private market, the utilisation rate in the top quintile (Q5) is
+approximately fourteen times that of the bottom quintile (Q1).
+A universal public subsidy narrows the gradient substantially but
+does not eliminate it, because non-price barriers (geographic access,
+cultural attitudes) persist across the income distribution. A
+means-tested subsidy restricted to quintiles Q1--Q3 achieves a
+near-neutral distribution of programme gains at a substantially lower
+fiscal cost, making it the dominant instrument if equity of access is
+the declared policy objective.\\
+\textit{Source:} Author's calculations based on \citet{alonpinilla2021}
+and \citet{seiz2023}.}
+\end{figure}
+
+\FloatBarrier
+
+Figure~\ref{fig:concentration} formalises these comparisons through
+concentration curves \citep{kakwani1977}. The private market yields a
+concentration index of approximately 0.42, strongly pro-rich,
+calibrated on Spanish income quintile shares (World Bank WDI 2023) and
+the Q5/Q1 access gradient of 14 \citep{alonpinilla2021}. Universal
+public funding reduces this to approximately 0.18; means-tested
+funding approaches distributional neutrality (concentration index
+$\approx 0.05$). If the declared goal of public OC funding is to
+improve equity of reproductive access, a means-tested instrument is
+clearly preferable on both efficiency and equity grounds.
+
+\begin{figure}[htbp]
+\centering
+\caption{Concentration curves for alternative OC programme designs}
+\label{fig:concentration}
+\includegraphics[width=0.88\textwidth]{media/media/image13.png}
+\caption*{\footnotesize\textit{Note:} The concentration curve
+\citep{kakwani1977} plots the cumulative share of programme benefits
+(vertical axis) against the cumulative share of the female population
+ranked by income (horizontal axis). A curve coinciding with the
+45-degree line indicates perfectly neutral distribution; curves below
+the diagonal indicate a pro-rich distribution. The private market
+(concentration index CI~$\approx$~0.42) distributes benefits strongly
+toward higher-income women. Universal public funding reduces the index
+to approximately 0.18, approaching but not reaching neutrality.
+Means-tested funding (CI~$\approx$~0.05) closely approximates
+distributional neutrality and is the preferred design on equity grounds.
+Calibration based on Spain's income distribution (World Bank WDI 2023)
+and the Q5/Q1 access gradient reported by \citet{alonpinilla2021}.\\
+\textit{Source:} Author's calculations based on \citet{alonpinilla2021},
+\citet{seiz2023}, and World Bank WDI (2023).}
+\end{figure}
+
+\FloatBarrier
 
 Three alternative institutional designs should be assessed alongside
 income targeting. First, direct public delivery through existing ART
@@ -585,23 +748,22 @@ dimensions examined.
 On cost-effectiveness, the analysis indicates that publicly funded
 elective OC is unlikely to become a self-sustaining financial process
 under empirically plausible utilisation and success rates. The gross
-fiscal return per euro spent (\euro{}0.21 in the base case)
-is well below break-even and dramatically below the \euro{}15.98
-return estimated for clinical IVF by \citet{matorras2016}. The critical
+fiscal return per euro spent (\euro{}0.21 in the base case) is well
+below break-even and dramatically below the \euro{}15.98 return
+estimated for clinical IVF by \citet{matorras2016}. The critical
 difference is that clinical IVF is provided to infertile couples for
-whom a live birth is genuinely additional; elective OC is provided
-to women who may well have conceived by other means, and most of whom
-will never use their stored oocytes. The low empirical utilisation
-rate (5--12\%) is therefore not a contingent implementation failure
-that improved programme design could remedy: it is a revealed
-preference signal that the option has value to users primarily as
-insurance, not as a pathway to a birth that would not otherwise
-have occurred.
+whom a live birth is genuinely additional; elective OC is provided to
+women who may well have conceived by other means, and most of whom will
+never use their stored oocytes. The low empirical utilisation rate
+(5--12\%) is therefore not a contingent implementation failure that
+improved programme design could remedy: it is a revealed preference
+signal that the option has value to users primarily as insurance, not
+as a pathway to a birth that would not otherwise have occurred.
 
 On budget impact, the annual cost of a national programme would run to
-\euro{}470M at minimum (5\% uptake) and would exceed \euro{}1.87Bn
-at 20\% uptake---a scale comparable to Spain's entire annual family
-and child policy budget, for a programme that fails the fiscal
+\euro{}470M at minimum (5\% uptake) and would exceed \euro{}1.87Bn at
+20\% uptake---a scale comparable to Spain's entire annual family and
+child policy budget, for a programme that fails the fiscal
 self-sustainability condition at all empirically meaningful parameter
 values.
 
@@ -783,8 +945,7 @@ The Netherlands. \emph{Reproductive BioMedicine Online}, 28(2),
 Navarro Espigares, J. L., Mart\'inez Navarro, L., Castilla Alcal\'a,
 J. A., \& Hern\'andez Torres, E. (2006). Coste de las t\'ecnicas de
 reproducci\'on asistida en un hospital p\'ublico. \emph{Gaceta
-Sanitaria}, 20(5), 382--391. DOI:
-\nolinkurl{10.1157/13093207}.
+Sanitaria}, 20(5), 382--391. DOI: \nolinkurl{10.1157/13093207}.
 
 \bibitem[Noyes et~al.(2009)]{noyes2009}
 Noyes, N., Porcu, E., \& Borini, A. (2009). Over 900 oocyte
@@ -860,188 +1021,5 @@ elective oocyte freezing: A retrospective observational study.
 
 \end{thebibliography}
 \endgroup
-
-% =======================================================================
-% APPENDIX
-% =======================================================================
-\clearpage
-\appendix
-
-\section{Decision-Tree Representation of the Cost
-Model}\label{app:decisiontree}
-
-This appendix presents a stylised decision tree of the economic logic
-underpinning the cost model in Section~\ref{sec:model}. The tree
-combines the behavioural parameters of Section~\ref{sec:parameters}
-(uptake and utilisation rates) with the clinical outcome of
-Section~\ref{sec:cost} (success rate) to trace the path from programme
-enrolment to an additional live birth, clarifying how programme costs
-are incurred at the vitrification stage regardless of whether oocytes
-are ever used. The fiscal break-even condition
-(Equation~\eqref{eq:fiscal}) is jointly determined by the behavioural
-and clinical margins at each node.
-
-Figure~\ref{fig:decision_tree} should be read as a schematic
-representation of the analytic framework in
-Section~\ref{sec:results}, not as a standalone empirical result.
-
-% =======================================================================
-% TABLES (after bibliographical references)
-% =======================================================================
-\clearpage
-
-\begin{table}[H]
-\centering
-\caption{Model parameters: base-case values and sensitivity ranges}
-\label{tab:parameters}
-\begin{threeparttable}
-\setlength{\tabcolsep}{10pt}
-\renewcommand{\arraystretch}{1.3}
-\begin{tabular}{lcccc}
-\toprule
-Parameter & Symbol & Base case & Sensitivity range &
-Source \\
-\midrule
-Vitrification cycle cost (\euro{}) & $C_u$ & 5,000 & 4,000--6,000 &
-SEF (2024) \\
-Thaw-and-transfer cost (\euro{}) & $C_T$ & 2,500 & 2,000--3,000 &
-Matorras et al. (2016) \\
-Utilisation rate & $u$ & 0.08 & 0.05--0.20 &
-Yang et al. (2022); Cobo et al. (2018) \\
-Success rate per thaw & $s$ & 0.30 & 0.20--0.40 &
-Cobo et al. (2016); Chronopoulou et al. (2021) \\
-Additionality factor & $\alpha$ & 0.50 & 0.20--0.70 &
-Calibrated from literature \\
-Net fiscal contribution (\euro{}, 2023) & NFC & 91,391 & 66,709--94,510
-& Matorras et al. (2016) \\
-\bottomrule
-\end{tabular}
-\begin{tablenotes}[flushleft]
-\footnotesize
-\item[a] All cost values in 2023 euros unless otherwise stated.
-The 2006 NFC of \euro{}66,709 from \citet{matorras2016} is
-inflation-adjusted using the INE IPCSNA healthcare deflator (2006--2023,
-$+37\%$) to \euro{}91,391. The naturally conceived individual NFC of
-\euro{}94,510 serves as an upper bound.
-\item[b] The utilisation rate range of 0.05--0.20 spans the empirical
-range documented in the cohort literature: 5\% \citep{trokoudes2011},
-8.4\% \citep{yang2022}, 12.1\% \citep{cobo2018}, and an upper
-optimistic bound of 20\%.
-\end{tablenotes}
-\end{threeparttable}
-\end{table}
-
-% =======================================================================
-% FIGURES (after tables)
-% =======================================================================
-\clearpage
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.88\textwidth]{media/media/image9.png}
-\caption{Cost per additional birth and sensitivity to utilisation rate
-and success rate}
-\label{fig:cost_sensitivity}
-\caption*{\footnotesize\textit{Note:} Bidimensional sensitivity
-analysis of cost per additional live birth over the plausible ranges
-of utilisation rate ($u$) and success rate per thaw ($s$), with
-additionality factor $\alpha = 0.50$. The horizontal plane at
-\euro{}91,391 marks the inflation-adjusted net fiscal contribution
-(NFC) break-even threshold. Values in 2023 euros.\\
-\textit{Source:} Author's calculations.}
-\end{figure}
-
-\clearpage
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.88\textwidth]{media/media/image10.png}
-\caption{Deterministic sensitivity analysis of cost per additional
-birth}
-\label{fig:tornado}
-\caption*{\footnotesize\textit{Note:} Each bar shows the range of
-cost per additional live birth obtained by varying one parameter at a
-time over its sensitivity range (Table~\ref{tab:parameters}) while
-holding all other parameters at base-case values. The dashed black
-vertical line denotes the base-case estimate (\euro{}433,333); the
-dotted blue vertical line denotes the NFC break-even threshold
-(\euro{}91,391). Values in 2023 euros.\\
-\textit{Source:} Author's calculations.}
-\end{figure}
-
-\clearpage
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.88\textwidth]{media/media/image11.png}
-\caption{Annual budgetary commitments under alternative uptake
-scenarios}
-\label{fig:budget_scenarios}
-\caption*{\footnotesize\textit{Note:} Annual programme costs (2023
-euros) under 5\%, 10\%, and 20\% uptake assumptions, including
-vitrification, thaw-and-transfer, and administration costs. Adverse
-event costs excluded. Comparison bar shows Spain's total annual family
-and child policy expenditure (OECD, 2024).\\
-\textit{Source:} Author's calculations based on SEF (2024) and
-Ministerio de Sanidad (2024).}
-\end{figure}
-
-\clearpage
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.88\textwidth]{media/media/image12.png}
-\caption{Estimated OC utilisation rates by income quintile under
-alternative funding designs}
-\label{fig:quintiles}
-\caption*{\footnotesize\textit{Note:} OC utilisation rates by income
-quintile under three designs: the current private market, a universal
-public subsidy, and a means-tested subsidy (Q1--Q3). Calibrated on the
-access gradients reported by \citet{alonpinilla2021} and
-\citet{seiz2023}.\\
-\textit{Source:} Author's calculations based on Alon and Pinilla
-(2021) and Seiz et al. (2023).}
-\end{figure}
-
-\clearpage
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.88\textwidth]{media/media/image13.png}
-\caption{Concentration curves for programme distributive analysis}
-\label{fig:concentration}
-\caption*{\footnotesize\textit{Note:} Concentration curves for three
-programme designs. The dashed 45-degree line represents perfect
-equality. A positive concentration index (CI) indicates a pro-rich
-distribution: private market CI~$\approx$~0.42; universal subsidy
-CI~$\approx$~0.18; means-tested subsidy CI~$\approx$~0.05. Calibration
-anchored to Spain's income distribution (World Bank, WDI 2023) and the
-Q5/Q1 access gradient of 14 \citep{alonpinilla2021}.\\
-\textit{Source:} Author's calculations based on Alon and Pinilla
-(2021), Seiz et al. (2023), and World Bank WDI (2023).}
-\end{figure}
-
-\clearpage
-
-% Appendix A figure
-\setcounter{figure}{0}
-\renewcommand{\thefigure}{A.\arabic{figure}}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.88\textwidth]{media/media/image8.png}
-\caption{Decision-tree representation of the cost structure of a
-publicly funded elective OC programme}
-\label{fig:decision_tree}
-\caption*{\footnotesize\textit{Note:} The tree traces the path from
-programme enrolment to an additional live birth. The baseline scenario
-assumes a 5\% uptake rate, an 8\% utilisation rate, and a 30\%
-clinical success rate. Vitrification cost: approximately \euro{}5,000
-per patient; thaw-and-transfer cost: approximately \euro{}2,500. NFC
-denotes the net fiscal contribution per additional birth. The fiscal
-break-even condition (Equation~\eqref{eq:fiscal}) is satisfied when
-the expected cost per live birth does not exceed the NFC.\\
-\textit{Source:} Author's own elaboration.}
-\end{figure}
 
 \end{document}
