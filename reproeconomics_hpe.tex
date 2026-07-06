@@ -19,6 +19,9 @@
 \usepackage{textcomp,eurosym,newunicodechar}
 \usepackage{titlesec}
 
+% Tables (rotating needed for sidewaystable)
+\usepackage{booktabs,array,tabularx,threeparttable,makecell,adjustbox,rotating}
+
 % Page layout -- double spacing, min 2.5 cm margins
 \geometry{margin=2.5cm}
 \doublespacing
@@ -26,10 +29,7 @@
 % Math
 \usepackage{amsmath,amssymb}
 
-% Tables
-\usepackage{booktabs,longtable,array,tabularx,threeparttable,makecell,adjustbox,rotating}
-
-% Unicode characters used in source data
+% Unicode characters
 \newunicodechar{α}{\ensuremath{\alpha}}
 \newunicodechar{β}{\ensuremath{\beta}}
 \newunicodechar{γ}{\ensuremath{\gamma}}
@@ -41,14 +41,16 @@
 % Hyperref
 \hypersetup{hidelinks,breaklinks=true}
 
-% Paragraph formatting
+% Paragraph and float spacing
 \setlength{\parindent}{1.25em}
 \setlength{\parskip}{0.25em}
-\setlength{\textfloatsep}{16pt plus 2pt minus 2pt}
+\setlength{\textfloatsep}{18pt plus 3pt minus 3pt}
+\setlength{\floatsep}{12pt plus 2pt minus 2pt}
 \setlength{\intextsep}{14pt plus 2pt minus 2pt}
 
 % Caption setup
-\captionsetup{font=small,labelfont=bf,justification=justified,singlelinecheck=false}
+\captionsetup{font=small,labelfont=bf,justification=justified,
+              singlelinecheck=false,skip=4pt}
 
 % Header/footer
 \pagestyle{fancy}
@@ -56,16 +58,14 @@
 \fancyfoot[C]{\thepage}
 \renewcommand{\headrulewidth}{0pt}
 
-% Section formatting -- bold titles with Arabic numerals
+% Section formatting -- bold titles, Arabic numerals
 \titleformat{\section}{\normalfont\bfseries\large}{\thesection.}{0.6em}{}
 \titlespacing*{\section}{0pt}{2.0ex plus .6ex minus .2ex}{0.8ex plus .2ex}
 
 \titleformat{\subsection}{\normalfont\bfseries\normalsize}{\thesubsection}{0.6em}{}
 \titlespacing*{\subsection}{0pt}{1.5ex plus .5ex minus .2ex}{0.6ex plus .2ex}
 
-\titleformat{\subsubsection}{\normalfont\bfseries\small}{\thesubsubsection}{0.6em}{}
-
-\setcounter{secnumdepth}{3}
+\setcounter{secnumdepth}{2}
 
 % -----------------------------------------------------------------------
 \begin{document}
@@ -76,7 +76,7 @@
 % =======================================================================
 \thispagestyle{fancy}
 
-% TODO: Add author affiliation block here
+% TODO: Add author name and affiliation here
 \begin{center}
 {\large\bfseries Reproeconomics: The Economic Impact of State-Funded
 Oocyte Cryopreservation}
@@ -88,29 +88,29 @@ Oocyte Cryopreservation}
 
 \noindent\textbf{Abstract}
 
-\noindent Spain has experienced persistent fertility decline and
-pronounced childbearing postponement. Recent political proposals to
-publicly fund elective oocyte cryopreservation (OC) raise questions
-about fiscal sustainability and cost-effectiveness. Drawing on Spanish
-demographic data from 1976--2022, I employ an Interrupted Time Series
-design to calibrate a demographic additionality parameter, embedded in
-a decision-analytic cost framework incorporating utilisation behaviour,
-age-dependent success probabilities, and generational accounting
-returns. The marginal cost per additional live birth substantially
-exceeds any plausible fiscal return under all empirically plausible
-parameter combinations. Publicly funded OC cannot be justified on
-pro-natalist or fiscal grounds; the relevant argument is redistribution
-and access.
+\noindent Spain's persistent fertility decline has prompted political
+proposals to publicly fund elective oocyte cryopreservation (OC) as a
+pro-natalist instrument. Drawing on a decision-analytic cost model
+calibrated with empirically observed utilisation rates, age-stratified
+success probabilities, and a generational accounting benchmark, this
+paper evaluates whether such a programme satisfies a fiscal
+self-sustainability condition. The marginal cost per additional live
+birth ranges from \euro{}137,500 (optimistic) to above
+\euro{}1,000,000 (pessimistic), exceeding the net fiscal contribution
+of an OC-conceived individual under all plausible parameter
+combinations. The programme is not self-financing; the valid
+justification for public funding is redistribution of reproductive
+access alone, not fiscal sustainability.
 
 \vspace{0.5em}
 
 \noindent\textbf{Keywords:} Elective oocyte cryopreservation;
-Cost-effectiveness; Fertility postponement; Health policy; Fiscal
-sustainability
+Cost-effectiveness; Health technology assessment; Fiscal sustainability;
+Spain
 
 \vspace{0.5em}
 
-% TODO: Confirm or add JEL classification codes
+% TODO: Confirm or adjust JEL classification codes
 \noindent\textbf{JEL Classification:} H51, I18, J13, H55
 
 % =======================================================================
@@ -122,137 +122,116 @@ sustainability
 \section{Introduction}\label{sec:introduction}
 % -----------------------------------------------------------------------
 
-Two-thirds of the world's population today resides in nations where
-the replacement rate of 2.1, the conventional estimate of what is
-required to maintain a steady population, falls below
-\citep{worldbank2025}. Spain's case is particularly acute. According
-to the most recent data from Spain's National Statistics Institute,
+Spain's demographic trajectory is among the most acute in the
+developed world. According to Spain's National Statistics Institute,
 318,005 births occurred in 2024, the lowest number since the
 statistics series started in 1941 and a decline of almost 25\% over
-the previous ten years \citep{ine2025mnp,funcas2024}. Women gave birth
-to their first child at an average age of 32.6 years, compared to 25.6
-in 1980 and 33.2 if only Spanish women are analysed
-\citep{funcas2024}.
-
-Against this demographic backdrop, assisted reproductive technologies
-(ART) have increasingly been perceived as a means to mitigate the
-biological constraints associated with delayed childbearing. The use of
-elective oocyte cryopreservation (OC) has expanded rapidly in Spain
-over the last decade: according to data from the National Activity
-Registry of the Spanish Fertility Society \citep{sef2024registro}, the
-number of women undergoing egg freezing increased almost eighteenfold
-between 2011 and 2021. Spain records the highest share of births to
-mothers aged 40 and over in the European Union, accounting for 10.7\%
-of all live births in 2021 \citep{blas2025}.
+the previous decade \citep{ine2025mnp,funcas2024}. Women gave birth to
+their first child at an average age of 32.6 years, compared to 25.6
+years in 1980 \citep{funcas2024}. Against this backdrop, the number of
+women undergoing elective oocyte cryopreservation (OC) in Spain
+increased almost eighteenfold between 2011 and 2021
+\citep{sef2024registro}, and Spain records the highest share of births
+to mothers aged 40 and over in the European Union, at 10.7\% of all
+live births in 2021 \citep{blas2025}.
 
 The Popular Party's policy statement, approved at its July congress,
 includes for the first time public subsidies for egg freezing for women
-who wish to delay motherhood \citep{blas2025,partidopopular2025}.
-Until now, Social Security has only covered this service in cases of
-illness that damages fertility; women have had to resort to private
-clinics for elective purposes. The project is modelled after the
-Galician government's programme, which provides publicly funded OC for
-women aged 30--35 under reproductive health criteria
-\citep{xunta2024}. Public funding for elective OC remains the
-exception across European health systems, where coverage is typically
-limited to medical indications such as fertility preservation prior to
-gonadotoxic therapy \citep{shenfield2017,gambadauro2023}. Existing studies assess OC
+who wish to delay motherhood \citep{blas2025,partidopopular2025}. The
+proposal is modelled after the Galician government's programme
+providing publicly funded OC for women aged 30--35 under reproductive
+health criteria \citep{xunta2024}. Public funding for elective OC
+remains the exception in European health systems, where reimbursement
+is typically limited to medical indications such as fertility
+preservation prior to gonadotoxic therapy
+\citep{shenfield2017,gambadauro2023}. Existing studies assess OC
 either from a clinical perspective or under individual-level economic
-models, but evidence remains scarce on its cost-effectiveness and
-fiscal sustainability when implemented as a publicly funded policy and
-evaluated at the population level.
+models; evidence on its cost-effectiveness and fiscal sustainability
+when evaluated at the population level remains scarce.
 
-This paper has three objectives. First, conduct a full economic
-evaluation of the proposed programme: constructing an incremental
-cost-effectiveness ratio (ICER) relative to the status quo of no
-public subsidy, estimating the annual budget impact under plausible
-uptake scenarios, and analysing the distributional consequences of
-alternative public-funding designs using concentration-curve
-methodology. Second, evaluate whether such a policy can be
-self-financing in the long run, in the sense that additional births
-generated by the intervention yield an increase in aggregate output at
-least comparable to programme costs. Third, determine whether publicly
-funded access to elective OC is likely to increase fertility outcomes
-in the medium term---a question whose answer bounds the demographic
-additionality parameter central to the economic model.
+If clinical IVF is already publicly funded for medical indications,
+the case for extending that logic to elective OC rests either on
+equity grounds---reducing the large socioeconomic gradient in private
+access documented by \citet{alonpinilla2021}---or on fiscal grounds,
+namely that additional births financed by the programme will generate a
+positive net return to the public purse. Assessing the fiscal dimension
+rigorously is the purpose of this paper.
+
+This paper provides an economic evaluation of publicly funded elective
+OC as proposed within the Spanish national policy debate. Specifically,
+it constructs a decision-analytic cost model to estimate: (i) the cost
+per additional live birth and an incremental cost-effectiveness ratio
+(ICER) relative to the status quo of private financing; (ii) the
+annual budget impact under alternative uptake scenarios; and (iii) the
+distributional consequences of universal versus means-tested funding
+designs. The paper asks whether the programme satisfies a fiscal
+self-sustainability condition---whether additional births generated by
+the intervention yield a return to the public purse at least comparable
+to programme costs.
 
 The remainder of the paper is structured as follows.
 Section~\ref{sec:literature} reviews the relevant literature.
-Section~\ref{sec:methodology} outlines the methodological framework
-and identification strategy. Section~\ref{sec:demographic} presents
-the fertility dynamics results that calibrate the demographic
-additionality parameter. Section~\ref{sec:economic} develops the
-economic evaluation. Section~\ref{sec:discussion} discusses the
-findings and their policy implications. Appendix~\ref{app:data}
-provides data description and full regression output; Appendix~\ref{app:decisiontree}
-presents a decision-tree representation of the cost model (see tables
-and figures at the end of the manuscript).
+Section~\ref{sec:model} describes the cost-effectiveness model.
+Section~\ref{sec:results} presents the results.
+Section~\ref{sec:discussion} discusses the findings and their policy
+implications.
 
 % -----------------------------------------------------------------------
 \section{Literature Review}\label{sec:literature}
 % -----------------------------------------------------------------------
 
-The literature converges on two findings central to the policy
-question examined here. Access to ART is extremely uneven and strongly
-correlated with socioeconomic position.
-\citet{alonpinilla2021} demonstrate, using microdata from the Spanish
-\emph{Encuesta de Fecundidad}, that access to ART and the choice
-between public and private provision are significantly influenced by
-income and education: treatment in private clinics is substantially
-more common for women with higher incomes and levels of education,
-while women from poorer socioeconomic backgrounds are more likely to be
-denied access even when they report reproductive issues (2021:9).
-Results also differ by sector, with women treated solely in the private
-sector displaying a greater cumulative pregnancy incidence than those
-treated in the public system (2021:15). Similar dynamics are documented
-at the European level by \citet{seiz2023}, who find significant
-cross-national disparities consistently and negatively affecting women
-from lower socioeconomic backgrounds.
+The literature converges on two findings that are central to the policy
+question examined here. First, access to assisted reproductive
+technologies (ART) is extremely uneven and strongly correlated with
+socioeconomic position. \citet{alonpinilla2021} demonstrate, using
+microdata from the Spanish \emph{Encuesta de Fecundidad}, that access
+to ART and the choice between public and private provision are
+significantly influenced by income and education: women from lower
+socioeconomic backgrounds are more likely to be denied access even when
+they report reproductive issues, while women treated solely in the
+private sector display a greater cumulative pregnancy incidence than
+those treated in the public system (2021:15). Similar dynamics are
+documented at the European level by \citet{seiz2023}, who find
+significant cross-national disparities consistently and negatively
+affecting women from lower socioeconomic backgrounds.
 
-The demand for and attitudes towards elective OC help to clarify the
-access dimension. The most frequently stated causes of non-medical OC,
-according to a systematic review by \citet{kynigopoulou2024}, are the
-lack of a suitable partner, investments in education and profession,
-and general economic uncertainties. OC is widely viewed as
-reproductive insurance---a purchase that reduces anxiety but is rarely
-exercised. \citet{gambadauro2023}, drawing on survey data from Swedish
-university students, find that OC is broadly accepted as a technology,
-but that support for public funding is significantly lower when OC is
-presented as age-related rather than medically required; there are no
-significant differences in willingness to pay between scenarios,
-implying that debate is more about who should pay than about the
-perceived usefulness of the technology.
+Second, the demand for elective OC is dominated by a preference for
+option value rather than for a definite birth. The most frequently
+stated reasons for non-medical OC, according to a systematic review by
+\citet{kynigopoulou2024}, are the lack of a suitable partner,
+investments in education and career, and general economic
+uncertainties. \citet{gambadauro2023}, drawing on survey data from
+Swedish university students, find that OC is broadly accepted as a
+technology but that support for public funding is significantly lower
+when OC is presented as age-related rather than medically required; OC
+is viewed predominantly as reproductive insurance rather than as a
+fertility enhancer.
 
-From an economic standpoint, the effectiveness and therefore the
-efficiency of elective OC depends critically on two parameters: age at
-freezing and subsequent utilisation. \citet{chronopoulou2021} show
-that live birth rates per vitrified oocyte decline sharply with age,
-making earlier freezing substantially more effective from a clinical
-perspective. However, clinical potential does not always convert into
-actual results. \citet{yang2022}, in a retrospective cohort of 2,038
+From an economic standpoint, the effectiveness of elective OC depends
+critically on the subsequent utilisation of stored oocytes. The
+recorded utilisation rates in the published cohort literature are
+consistently low. \citet{yang2022}, in a retrospective cohort of 2,038
 women followed over seven years, found that only 8.4\% returned to use
 their vitrified oocytes, yielding a population-level birth rate of just
 3.0\% relative to all women who froze. In a Spanish private clinic
 sample of 1,241 women, \citet{cobo2018} reported a 12.1\% return rate
 over a median follow-up of 4.2 years; rates are as low as 5\% in
 United Kingdom private settings \citep{trokoudes2011}. The cost per
-live delivery rises significantly when expenditures are averaged among
+live delivery rises substantially when expenditures are averaged among
 all freezing women rather than only those who eventually use OC
-\citep{yang2022}. Because utilisation is revealed-preference behaviour
-that a price subsidy will only partially shift, programme cost must be
-spread over all recipients, not only those who ultimately attempt a
-pregnancy.
+\citep{yang2022}: because utilisation is a revealed preference that a
+price subsidy will only partially shift, programme cost must be spread
+over all recipients, not only those who ultimately attempt a pregnancy.
 
 The formal cost-effectiveness literature reaches qualified conclusions.
 \citet{loendersloot2011}, in a Markov model contrasting elective OC at
 age 35 with no freezing followed by subsequent IVF, find that OC is
-cost-effective only under stringent assumptions, requiring favourable
-success probabilities and high utilisation rates simultaneously.
+cost-effective only under stringent assumptions, requiring high
+utilisation rates and favourable success probabilities simultaneously.
 \citet{bakkensen2022}, drawing on US SART-CORS data, find that OC at a
-younger age can lower the expected cost per live delivery and raise the
-likelihood of reaching the intended family size among women who delay
-childbearing, but sensitivity analyses reveal these findings depend
-substantially on assumptions about freezing age and future use.
+younger age can lower the expected cost per live delivery among women
+who delay childbearing, but sensitivity analyses reveal these findings
+depend heavily on assumptions about freezing age and future use.
 Positive outcomes at the individual level do not always translate to a
 population-wide, publicly financed solution.
 
@@ -262,80 +241,59 @@ contribution (NFC) of individuals born through assisted reproduction in
 Spain using a generational accounting methodology. In the base case,
 the NFC of an IVF-conceived individual is \euro{}66,709 (at 2006
 prices), implying a return of \euro{}15.98 per euro of public
-investment; the discounted value of future taxes and social
+investment: the discounted value of future taxes and social
 contributions surpasses public spending despite significant upfront
 medical expenditures (2016:118). This figure serves as the principal
 benchmark against which the programme cost model in
-Section~\ref{sec:economic} is calibrated. Critically, however,
-\citet{matorras2016} model clinical IVF for infertile couples; the
-parameters governing cost and success for elective OC are materially
-different: the upfront vitrification cycle adds a cost category absent
-from IVF, and the low utilisation rate means the effective cost per
-birth is spread over a much larger denominator. International evidence
+Section~\ref{sec:model} is calibrated. International evidence
 similarly shows positive lifetime fiscal contributions for ART-conceived
 individuals in most countries, with the notable exception of the
 Netherlands \citep{moolenaar2014}.
 
-What is largely unexplored is whether publicly funded elective OC can
-be justified once behavioural responses, selection into utilisation,
-and long-term fiscal effects are considered jointly. The present paper
-fills this gap by embedding empirically calibrated utilisation and
-additionality parameters within a complete generational accounting
-framework adapted specifically for elective OC.
+The analytic step not undertaken by \citet{matorras2016} is to embed
+the NFC estimate within a complete cost model that incorporates the
+vitrification cost layer specific to elective OC, the empirically
+observed utilisation rate, the age-stratified success rate at thaw, and
+a demographic additionality factor---the share of OC-assisted births
+that would not have occurred by any other means. Once these four
+adjustments are applied, the effective fiscal return per euro of public
+OC expenditure falls considerably below the \euro{}15.98 reported for
+clinical IVF. That exercise is the contribution of the present paper.
 
 % -----------------------------------------------------------------------
-\section{Methodology}\label{sec:methodology}
+\section{The Cost-Effectiveness Model}\label{sec:model}
 % -----------------------------------------------------------------------
 
-\subsection{Analytical framework}\label{sec:framework}
-
-The analysis comprises two integrated components. The first employs an
-Interrupted Time Series (ITS) design based on annual Spanish
-demographic data (1976--2022) to characterise the structural change in
-fertility dynamics at an endogenously determined breakpoint
-$T_0 = 2010$. This component is explicitly a calibration exercise
-rather than a causal evaluation, since no real OC programme existed
-during the estimation window: the ITS identifies structural dynamics in
-the historical fertility series, not the effects of an implemented
-policy. The demographic findings from this component bound the
-demographic additionality parameter $\alpha$, which is defined as the
-share of OC-assisted births that would not have occurred by any other
-means. The second component embeds these demographic findings in a
-decision-analytic cost framework to estimate an ICER relative to the
-status quo, assess fiscal self-sustainability, quantify budget impact
-under alternative uptake scenarios, and evaluate the distributional
-consequences of different funding designs.
-
-\subsection{Cost parameters and assumptions}\label{sec:assumptions}
+\subsection{Framework and cost parameters}\label{sec:framework}
 
 OC is best conceptualised as a sequence of clinically established yet
-economically heterogeneous stages, as reliance on average treatment
-costs risks obscuring substantial variation in marginal resource use.
-The process begins with a gynaecologic diagnostic and eligibility
-assessment. This is followed by controlled ovarian stimulation, during
-which exogenous gonadotropins are administered over approximately
-10--14 days; this phase typically constitutes the most
-resource-intensive component. Once adequate follicular maturation is
-achieved, oocyte retrieval is performed via ultrasound-guided
-aspiration under light anaesthesia. Retrieved oocytes are subsequently
-vitrified for long-term storage in liquid nitrogen \citep{pai2021}.
+economically heterogeneous stages. The process begins with a
+gynaecologic diagnostic and eligibility assessment, followed by
+controlled ovarian stimulation using exogenous gonadotropins over
+approximately 10--14 days---the most resource-intensive component.
+Once adequate follicular maturation is achieved, oocyte retrieval is
+performed via ultrasound-guided aspiration under light anaesthesia, and
+retrieved oocytes are vitrified for long-term storage in liquid
+nitrogen \citep{pai2021}. Should the woman subsequently decide to
+attempt a pregnancy, she undergoes a separate thaw-and-transfer IVF
+cycle.
 
 The official cost for assisted reproduction in the Spanish public
-health system is not officially documented. Cost inputs are drawn from
-published estimates of direct healthcare costs for IVF and artificial
-insemination (AI) cycles in two Spanish institutions
-\citep{matorrasweinig2011,matorras2001,navarro2006}. Based on an
-average success rate of 28.7\% \citep{sef2001}, the expected investment
-per live birth is \euro{}4,173 for IVF and \euro{}3,629 for AI (2006
-prices), with delivery costs excluded as they are presumed constant
-between assisted and naturally conceived children. Three caveats
-qualify the direct application of these figures to elective OC. First,
-all \citet{matorras2016} values are in 2006 prices; Spanish healthcare
-input costs rose by about 37\% between 2006 and 2023 (INE IPCSNA), so
-nominal comparisons understate present costs. Second, the 28.7\%
-success rate reflects clinical IVF for infertility and is not directly
-transferable to elective OC, since age at retrieval, age at thaw, and
-number of vitrified oocytes interrelate non-linearly
+health system is not documented. Cost inputs are drawn from published
+estimates of direct healthcare costs for IVF cycles in two Spanish
+institutions \citep{matorrasweinig2011,matorras2001,navarro2006}. Based
+on an average success rate of 28.7\% \citep{sef2001}, the expected
+investment per live IVF birth is \euro{}4,173 (2006 prices), reflecting
+that 75\% of pregnancies end in a live birth; delivery costs are
+excluded as they are presumed constant between assisted and naturally
+conceived children. Three caveats qualify the application of these
+figures to elective OC. First, all \citet{matorras2016} values are in
+2006 prices; Spanish healthcare input costs rose by about 37\% between
+2006 and 2023 (INE IPCSNA), so the inflation-adjusted NFC is
+approximately \euro{}91,391 at 2023 prices. Second, the 28.7\% success
+rate reflects clinical IVF for infertility and does not transfer
+directly to elective OC, since age at retrieval, age at thaw, and
+number of vitrified oocytes interact non-linearly
 \citep{cobo2016,chronopoulou2021}. Third, elective OC adds a cost
 element absent from clinical IVF: the vitrification cycle itself
 (stimulation, retrieval, laboratory processing, multi-year
@@ -344,249 +302,49 @@ This cost is incurred regardless of whether the woman ever uses her
 oocytes, making it a fixed programme cost that must be included in any
 complete budget-impact analysis.
 
-\subsection{The ITS design as a calibration tool}\label{sec:its}
+\subsection{Utilisation rates, success rates, and the additionality
+parameter}\label{sec:parameters}
 
-When randomised assignment is not feasible and no reliable control
-group exists, an ITS design is a segmented-trend regression framework
-that can support causal inference when a genuine policy intervention is
-externally assigned and the parallel-trends assumption holds
-\citep{stockwatson2020}. In the present study, however, no actual
-policy intervention took place during the estimation window. The ITS is
-therefore applied in a calibration mode: the structural break
-identified at $T_0 = 2010$ serves as a hypothetical anchor for the
-counterfactual, and the estimated post-break coefficients characterise
-the fertility dynamics that a real OC programme implemented at that
-date would have needed to replicate.
+The percentage of women who actually use their vitrified oocytes is
+the sole major driver of overall programme cost-effectiveness. As
+documented in Section~\ref{sec:literature}, empirical utilisation rates
+are consistently well below levels typically assumed by programme
+designers: 8.4\% \citep{yang2022}, 12.1\% in Spain
+\citep{cobo2018}, and as low as 5\% in United Kingdom private settings
+\citep{trokoudes2011}. Low utilisation is not a market failure
+correctable via subsidy; it reflects the preferences of users who
+value the option, not the outcome \citep{kynigopoulou2024}.
 
-Let $Y_t$ denote an aggregate outcome observed at time
-$t = 1,\ldots,T$, and let $T_0$ be the structural breakpoint. Define
-the binary break indicator
+Success rates also differ materially from the clinical IVF average.
+\citet{cobo2016} estimate that a woman who vitrifies five oocytes has a
+cumulative live birth probability of approximately 22\% (at age
+$< 35$), compared to 72\% if fifteen or more mature oocytes are
+obtained. \citet{chronopoulou2021} document that live birth rates per
+vitrified oocyte decline sharply with age. The frequently reported
+average success rate of 28.7\% therefore substantially overestimates
+outcomes for women who freeze fewer than ten oocytes or after age 37,
+which is the modal profile of elective users. A success rate of
+$s = 0.30$ is adopted for the base case, with sensitivity analysis
+extended to the range $[0.20,\,0.40]$.
 
-\begin{equation}
-D_t =
-\begin{cases}
-0 & \text{if } t < T_0,\\
-1 & \text{if } t \geq T_0.
-\end{cases}
-\label{eq:Dt}
-\end{equation}
+The demographic additionality parameter $\alpha$---the share of
+OC-assisted births that would not have occurred by any other means---is
+the most uncertain parameter in the model. It is bounded by three
+considerations. First, women who use their stored oocytes may have
+conceived naturally or via other ART in the absence of the programme.
+Second, the consistently low return-to-use rates imply that OC
+generates one live birth per approximately 33 women who freeze at the
+best-documented utilisation and success rates, limiting the scope for
+net additional births. Third, qualitative and survey evidence
+consistently indicates that OC is used predominantly as reproductive
+insurance---an option that reduces anxiety rather than enabling births
+that would not otherwise occur
+\citep{kynigopoulou2024,gambadauro2023}. These three considerations
+support $\alpha \in [0.30,\,0.50]$ as the base case, with sensitivity
+extended to $[0.20,\,0.70]$.
 
-The break indicator $D_t$ does not represent an observed policy reform;
-it marks the structural breakpoint at $T_0 = 2010$. Employing the
-notation and arrangement of \citet{stockwatson2020} for policy analysis
-with time trends, the ITS regression model is
-
-\begin{equation}
-Y_t = \beta_0 + \beta_1 t + \beta_2 D_t + \beta_3 (t - T_0) D_t + u_t
-\label{eq:its-model}
-\end{equation}
-
-\noindent where $u_t$ is an unobserved error term. $\beta_1$ shows the
-linear pre-break time trend, $\beta_2$ reflects the instantaneous level
-shift at the structural break, and $\beta_3$ indicates the change in
-the slope of the post-break trend. As emphasised by
-\citet{stockwatson2020}, serial correlation does not bias OLS
-coefficient estimates but invalidates conventional standard errors;
-inference therefore relies on heteroskedasticity- and
-autocorrelation-consistent (HAC) standard errors throughout. All
-post-break parameters must be interpreted as identifying the structural
-change in fertility at $T_0$, not determining the causal impact of a
-programme.\footnote{The logit specification described in
-Appendix~\ref{app:data} complements the linear ITS as a qualitative
-robustness check by evaluating the probability of observing
-high-fertility outcomes before and after the break. Owing to
-quasi-complete separation arising from the endogenous construction of
-its dependent variable, the logit results should not be interpreted as
-an independent source of identification.}
-
-\subsection{Intervention year selection}\label{sec:intervention-year}
-
-In any ITS design, the choice of the intervention year is crucial as
-it controls the temporal partition between pre-intervention trends and
-post-intervention dynamics. The intervention year is $T_0 = 2010$,
-derived from a formal Euclidean distance criterion. The 2020
-observation is treated as the terminal observation and compared with
-each preceding year in the dataset; the distance-minimisation criterion
-identifies the year in which Spain's fertility structure most closely
-resembled its 2020 configuration, thereby marking the beginning of the
-structural regime characterising the post-break period. The pre-trend
-test in Figure~\ref{fig:pretrend} confirms close alignment between the
-observed trajectory and the estimated pre-break linear trend using only
-pre-2010 data, supporting the counterfactual assumption.
-
-The break-date sensitivity analysis in Figure~\ref{fig:break_sensitivity}
-provides additional justification for $T_0 = 2010$. Specifications
-allocating the structural break to earlier candidate years produce
-smaller, less statistically significant level-shift coefficients. At
-$T_0 = 2010$, the estimated level-shift coefficient is the largest in
-absolute magnitude, negative, and highly statistically significant
-across all candidate years.\footnote{This does not establish 2010 as
-the causal date of any policy; it confirms that fertility data show
-their sharpest discontinuity at that point in the sample period.}
-$T_0 = 2010$ provides a pre-break window of 34 observations
-(1976--2009) and a post-break window of 13 observations (2010--2022),
-sufficient to identify the baseline trend reliably and estimate slope
-corrections. This framing governs every interpretative claim in
-Sections~\ref{sec:demographic} and~\ref{sec:economic}: post-break
-dynamics reflect the fertility dynamics linked to the historically
-recognised structural break, not the causal impact of an established
-OC programme.
-
-% -----------------------------------------------------------------------
-\section{Fertility Dynamics and Additionality Calibration}\label{sec:demographic}
-% -----------------------------------------------------------------------
-
-The ITS results reported here capture the deviation of observed
-fertility from the pre-2010 counterfactual trajectory and are used to
-calibrate the demographic additionality parameter $\alpha$ entering the
-economic model. The central diagnostic question is whether the
-post-break dynamics exhibit the age-specific recovery that a properly
-functioning OC programme would predict: partial recuperation of
-fertility at ages 35--39 (oocytes used after a delay) and continued
-fertility at ages 40--44 (successful use within the target age window).
-Whether delayed childbearing translates into higher completed fertility
-depends on whether later-life biological constraints outweigh the gains
-from postponement.
-
-For women aged 35--39, the post-break gap between fitted and
-counterfactual age-specific fertility rates (ASFRs) is negative in the
-years immediately following 2010, indicating that observed fertility
-falls below the level predicted by continuation of the pre-break trend.
-Over time, however, the magnitude of this gap progressively declines
-and in later post-break years approaches zero and becomes slightly
-positive, a pattern consistent with partial delayed-childbearing
-recuperation at this age group.
-
-For women aged 40--44, the pattern is qualitatively different. The
-post-break gap remains predominantly negative throughout the entire
-post-2010 period, with no sustained convergence toward the
-counterfactual trajectory (Figure~\ref{fig:asfr_gap}). This
-asymmetry---partial recovery at ages 35--39 but a permanent negative
-deviation at ages 40--44---is the central demographic finding used to
-calibrate $\alpha$.
-
-This asymmetry has a specific relevance for the economic evaluation.
-If an OC programme targets women aged 30--35, their oocytes would
-typically be used at ages 38--45, exactly the age window where the
-ASFR remains below its counterfactual. This suggests that even women
-who successfully use their oocytes would be operating within conditions
-of structural fertility suppression, reducing the likelihood that the
-resulting birth is genuinely additional. The aggregate evidence further
-indicates that the structural break at $T_0 = 2010$ is associated with
-a large and statistically significant negative level shift in adjusted
-total fertility (adjTFR) with no subsequent convergence toward the
-pre-break counterfactual; the post-break deviation remains negative
-over the entire post-2010 period. This pattern does not conform with
-complete intertemporal substitution and suggests that delayed
-childbearing does not lead to improved total fertility levels at the
-aggregate level. The demographic additionality parameter $\alpha$
-should therefore be calibrated toward its lower range
-($\alpha \in [0.3,\,0.5]$), which mechanically raises the estimated
-cost per additional birth. Full regression results, including the
-linear ITS estimates with macroeconomic controls, are reported in
-Table~\ref{tab:its-linear} in Appendix~\ref{app:data} (see tables at
-the end of the manuscript).
-
-% -----------------------------------------------------------------------
-\section{Economic Evaluation}\label{sec:economic}
-% -----------------------------------------------------------------------
-
-\subsection{Generational accounting benchmark}\label{sec:benchmark}
-
-Infertility affects 15\% of Spain's population, approximately one in
-seven couples of reproductive age \citep{matorrasweinig2011}. The
-Spanish public health care system provides two approaches to assisted
-reproduction: IVF and AI, with public financing covering a maximum of
-three IVF cycles or four AI cycles. Eligibility is limited to females
-between the ages of 18 and 40 who are classified as infertile, with
-priority given to nulliparous infertile couples \citep{alberto2002}.
-Despite this framework, demand outstrips supply: in 2010, about one
-million couples requested treatment but just 22\% received at least one
-cycle, 65\% of which was done in private institutions. Average waiting
-times in the public system reached 339 days, creating both extra
-demand and inequity in access. This perceived access gap is the
-appropriate starting point for an equity argument in favour of publicly
-funded elective OC: if clinical IVF is already publicly funded for
-medical indications, rejecting elective OC on cost grounds while
-tolerating a 14-fold socioeconomic gradient in private access
-\citep{alonpinilla2021} presents a tension with the Spanish National
-Health System (SNS) principle of universal coverage. Yet equity in
-access does not justify public expenditure without evidence that the
-programme accomplishes meaningful demographic outcomes at a reasonable
-cost.
-
-From a macro-fiscal perspective, previous research suggests that even
-under optimistic estimates, a shrinking birth rate and population
-ageing can produce fiscal imbalances mitigable only by cuts in
-government spending or increases in taxation
-\citep{imw2012,mess2006,nrc2012,perezcamarero2012}. Higher fertility
-would contribute to a medium-term growth of the taxpaying population,
-partially offsetting the fiscal pressures of ageing. Generational
-accounting models estimate the lifetime NFC of a person born through
-ART as the present value of all gross revenues received by the State
-from the individual over the life cycle minus direct transfer
-expenditures, with transfers and taxes apportioned by the risk of
-falling into various socioeconomic classes in each year of life.
-
-Generational accounting findings indicate that the lifetime present
-value of taxes paid by a naturally conceived individual is
-\euro{}370,482, substantially larger than transfers of \euro{}275,972,
-yielding an NFC of \euro{}94,510. After treatment costs, the NFC of an
-IVF-conceived individual is \euro{}66,709 and \euro{}67,253 for AI (at
-2006 prices), implying returns of \euro{}15.98 and \euro{}18.53 per
-euro invested, respectively \citep{matorras2016}. All cost data from
-\citet{matorras2016} are denominated in 2006 euros; applying the INE
-IPCSNA healthcare cost deflator of 37\% (2006--2023) yields an
-inflation-adjusted NFC of approximately \euro{}91,391 and an adjusted
-expected IVF investment per live birth of approximately \euro{}5,717 at
-2023 prices.
-
-The analytic step not undertaken by \citet{matorras2016} is to embed
-the NFC estimate within a complete cost-effectiveness model that
-incorporates: (i) the vitrification cost layer specific to elective OC;
-(ii) the empirically observed utilisation rate, which determines how
-many women must freeze oocytes per live birth; (iii) the age-stratified
-success rate at thaw; and (iv) the demographic additionality factor
-$\alpha$. Once these four adjustments are applied, the effective fiscal
-return per euro of public OC expenditure falls considerably below the
-\euro{}15.98 reported for clinical IVF and under most empirically
-plausible parameter combinations falls below the fiscal break-even
-point.
-
-\subsection{Parameters: utilisation rates and success rates}\label{sec:parameters}
-
-The percentage of women who actually use their vitrified oocytes is the
-sole major driver of overall programme cost-effectiveness. Recorded
-utilisation rates in published cohort studies are much lower than
-programme designers tend to assume. In the retrospective cohort of
-2,038 women spanning seven years, \citet{yang2022} found that only
-8.4\% returned to use their oocytes, with a live birth rate of 3.0\%
-relative to all women who froze. \citet{cobo2018} reported a 12.1\%
-return rate in a Spanish private clinic sample of 1,241 women over a
-median follow-up of 4.2 years. Rates are as low as 5\% in United
-Kingdom private settings \citep{trokoudes2011}. These findings are
-consistent with qualitative evidence in \citet{kynigopoulou2024}: OC
-acts largely as reproductive insurance---a purchase that reduces
-anxiety but is rarely exercised in practice. Such low utilisation is
-not a market failure amenable to subsidy; it reflects the preferences
-of users who value the option, not the outcome.
-
-The 28.7\% average success rate for IVF cycles conducted for clinical
-infertility \citep{sef2001} does not transfer directly to elective OC
-for two reasons. First, elective OC is conducted most often between
-ages 30 and 37, with oocytes typically not used until ages 38--44,
-where biological age at retrieval and age at utilisation co-determine
-success. Second, the number of mature oocytes vitrified per cycle
-moderates success continuously: \citet{cobo2016} estimate that a woman
-who vitrifies five oocytes has a cumulative live birth probability of
-approximately 22\% (at age $<35$), compared to 72\% if fifteen or more
-oocytes are obtained. This highlights that the frequently reported
-average success rate substantially overestimates outcomes for women who
-freeze fewer than ten oocytes or do so after age 37, the modal profile
-of elective users. These age and quantity gradients underpin the
-parameter ranges used in the sensitivity analysis below.
-
-\subsection{Cost per additional live birth}\label{sec:cost-per-birth}
+\subsection{Cost per additional live birth and fiscal
+sustainability}\label{sec:cost}
 
 Let $C_u$ denote the cost of a vitrification cycle including five-year
 storage (\euro{}5,000 at SEF 2023 prices), $C_T$ the cost of a
@@ -596,322 +354,442 @@ additionality factor. The expected cost per additional live birth is
 
 \begin{equation}
 \text{Cost per birth} = \frac{C_u + u\,C_T}{u\,s\,\alpha}.
-\label{eq:cost-per-birth}
+\label{eq:cost}
 \end{equation}
 
-At the base-case parameters ($u = 0.08$, $s = 0.30$, $\alpha = 0.50$),
-the cost per additional live birth is \euro{}433,333. Figure~\ref{fig:cost_sensitivity}
-presents a bidimensional sensitivity analysis over the plausible ranges
-of $u$ and $s$, with $\alpha$ held constant at 0.50. Costs range from
-\euro{}137,500 (optimistic: $u = 0.20$, $s = 0.40$) to above
-\euro{}1,000,000 (pessimistic: $u = 0.05$, $s = 0.20$). At no point
-in the plausible parameter space does the cost per birth fall below
-the \euro{}91,391 inflation-adjusted net fiscal contribution per
-additional birth. In the empirical utilisation range (5--12\%), the
-cost per additional birth lies between \euro{}433,333 and
-\euro{}683,333, far exceeding any defensible willingness-to-pay
-threshold for a publicly funded pro-natalist intervention.
-
-The tornado chart in Figure~\ref{fig:tornado} illustrates that the
-utilisation rate is by far the primary uncertainty driver: varying $u$
-from 5\% to 20\% alone shifts the cost per birth by more than
-\euro{}500,000, dwarfing the sensitivity to any other parameter.
-
-\FloatBarrier
-
-\subsection{Fiscal self-sustainability condition}\label{sec:fiscal}
-
-The comparison of cost per additional birth to the
-inflation-adjusted NFC from \citet{matorras2016} illustrates the
-financial arithmetic of the programme. At the base-case parameters
-($u = 0.08$, $s = 0.30$, $\alpha = 0.50$), the cost per additional
-live birth is \euro{}433,333 and the gross fiscal return per euro of
-public expenditure is approximately \euro{}0.21 (\euro{}91,391 /
-\euro{}433,333), well below break-even and dramatically less than the
-\euro{}15.98 return for clinical IVF. Under the pessimistic utilisation
-scenario ($u = 0.05$, $s = 0.20$), costs per birth exceed
-\euro{}1,025,000 and the fiscal return falls to \euro{}0.09 per euro
-invested, implying a structural fiscal loss of more than \euro{}0.91
-per euro spent.
-
-The fiscal self-sustainability condition requires
+\noindent The numerator is the total expected public expenditure per
+woman who freezes: the fixed vitrification cost plus the expected
+thaw-and-transfer cost incurred by the fraction $u$ who return. The
+denominator is the expected number of additional live births per woman
+who freezes. A programme is fiscally self-sustaining if and only if the
+expected cost per additional birth does not exceed the NFC:
 
 \begin{equation}
 u\,s\,\alpha \;\geq\; \frac{C_u + u\,C_T}{\mathrm{NFC}}.
-\label{eq:fiscal-condition}
+\label{eq:fiscal}
 \end{equation}
 
-Because $u$ appears on both sides, this condition is nonlinear and must
-be evaluated numerically. At the inflation-adjusted NFC of
-\euro{}91,391, holding $\alpha = 0.60$ and $s = 0.35$ at their upper
-plausible bounds, the break-even utilisation rate is
-$u \approx 0.30$---approximately 3.8 times the empirical average.
-Under the more conservative 2006 NFC of \euro{}66,709, the required
-utilisation rate rises to $u \approx 0.43$, more than five times the
-observed average. The programme therefore fails the fiscal
-self-sustainability condition on either price basis by a large margin
-at any empirically plausible parameter combination.
+\noindent Because $u$ appears on both sides, this condition is
+nonlinear and must be evaluated numerically. At the inflation-adjusted
+NFC of \euro{}91,391 (2023 prices), the required break-even product
+$u\,s\,\alpha$ can be calculated for any combination of clinical and
+behavioural assumptions. Table~\ref{tab:parameters} summarises all
+model parameters, their role in the cost equations, base-case values,
+and sensitivity ranges.
+
+\begin{sidewaystable}[p]
+\centering
+\caption{Model parameters: roles, base-case values, and sensitivity ranges}
+\label{tab:parameters}
+
+\begin{threeparttable}
+\small
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.25}
+
+\begin{tabularx}{0.95\textheight}{@{}Y c Y c c@{}}
+\toprule
+Parameter & Symbol &
+\makecell{Role in\\Eq. (1)--(2)} &
+\makecell{Base\\case} &
+\makecell{Sensitivity\\range} \\
+\midrule
+
+\multicolumn{5}{@{}l}{\textit{Panel A --- Cost inputs}} \\[2pt]
+
+\quad Vitrification cycle, incl.\ 5-yr storage (\euro{}) &
+$C_u$ & Numerator, fixed & 5,000 & 4,000--6,000 \\
+
+\quad Thaw-and-transfer IVF cycle (\euro{}) &
+$C_T$ & Numerator, variable & 2,500 & 2,000--3,000 \\[6pt]
+
+\multicolumn{5}{@{}l}{\textit{Panel B --- Effectiveness parameters}} \\[2pt]
+
+\quad Utilisation rate (share who return to use oocytes) &
+$u$ & Denominator, primary driver & 0.08 & 0.05--0.20 \\
+
+\quad Clinical success rate per thaw cycle &
+$s$ & Denominator & 0.30 & 0.20--0.40 \\
+
+\quad Demographic additionality factor &
+$\alpha$ & Denominator, fiscal scope & 0.50 & 0.20--0.70 \\[6pt]
+
+\multicolumn{5}{@{}l}{\textit{Panel C --- Fiscal benchmark}} \\[2pt]
+
+\quad Net fiscal contribution per additional birth (\euro{}, 2023) &
+NFC & Break-even threshold (Eq.~2) & 91,391 & 66,709--94,510 \\
+
+\bottomrule
+\end{tabularx}
+
+\begin{tablenotes}[flushleft]
+\scriptsize
+\item[a] The cost per additional birth from Equation~\eqref{eq:cost}
+at base-case values is \euro{}433,333. The fiscal
+self-sustainability condition in Equation~\eqref{eq:fiscal} requires
+this value not to exceed the net fiscal contribution per additional
+birth. At base-case parameters, the fiscal return is approximately
+\euro{}0.21 per euro spent.
+\end{tablenotes}
+
+\end{threeparttable}
+\end{sidewaystable}
+
+% -----------------------------------------------------------------------
+\section{Results}\label{sec:results}
+% -----------------------------------------------------------------------
+
+\subsection{Cost-effectiveness and sensitivity analysis}\label{sec:costeff}
+
+At the base-case parameters ($u = 0.08$, $s = 0.30$, $\alpha = 0.50$),
+the expected cost per additional live birth is \euro{}433,333. The
+gross fiscal return per euro of public expenditure is therefore
+approximately \euro{}0.21 (\euro{}91,391 / \euro{}433,333)---well below
+break-even and dramatically below the \euro{}15.98 return estimated for
+clinical IVF by \citet{matorras2016}. Under the pessimistic scenario
+($u = 0.05$, $s = 0.20$), costs per birth exceed \euro{}1,025,000 and
+the fiscal return falls to approximately \euro{}0.09 per euro,
+implying a structural fiscal loss of more than \euro{}0.91 per euro of
+public expenditure.
+
+Figure~\ref{fig:cost_sensitivity} maps the full cost surface across
+the plausible ranges of utilisation rate and success rate. Costs range
+from \euro{}137,500 (optimistic: $u = 0.20$, $s = 0.40$) to above
+\euro{}1,000,000 (pessimistic: $u = 0.05$, $s = 0.20$). At no point
+in the plausible parameter space does the cost per birth fall below the
+\euro{}91,391 inflation-adjusted NFC. In the empirical utilisation
+range (5--12\%), the cost per additional birth lies between
+\euro{}433,333 and \euro{}683,333.
+
+\begin{figure}[htbp]
+\centering
+\caption{Cost per additional live birth: sensitivity to utilisation rate
+and success rate}
+\label{fig:cost_sensitivity}
+\includegraphics[width=0.88\textwidth]{media/media/image9.png}
+\caption*{\footnotesize\textit{Note:} The surface plots the cost per
+additional live birth (Equation~\eqref{eq:cost}) as a function of the
+utilisation rate ($u$) and the success rate per thaw cycle ($s$), with
+the additionality factor fixed at $\alpha = 0.50$. The flat horizontal
+plane marks the inflation-adjusted net fiscal contribution of
+\euro{}91,391---the break-even threshold below which the programme
+would be fiscally self-sustaining. The entire cost surface lies above
+this plane across the plausible parameter space: no combination of $u$
+and $s$ consistent with the empirical evidence yields fiscal
+self-sustainability. At the empirical midpoint ($u = 0.08$,
+$s = 0.30$), the cost per additional birth is \euro{}433,333.
+Values in 2023 euros.\\
+\textit{Source:} Author's calculations.}
+\end{figure}
 
 \FloatBarrier
 
+The deterministic sensitivity analysis confirms that the utilisation
+rate $u$ is by far the primary uncertainty driver:
+Figure~\ref{fig:tornado} shows that varying $u$ from 5\% to 20\% alone
+shifts the cost per birth by more than \euro{}500,000, dwarfing the
+sensitivity to any other parameter. This reflects the structure of
+Equation~\eqref{eq:cost}: programme expenditure is fixed per freezer
+($C_u$ is paid regardless of whether oocytes are ever used), but
+additional births are a small fraction of all freezers, so small
+changes in $u$ generate large changes in cost per birth. The
+additionality factor $\alpha$ and the success rate $s$ are the next
+most influential parameters; cost inputs ($C_u$, $C_T$) have
+comparatively modest effects.
+
+\begin{figure}[htbp]
+\centering
+\caption{Drivers of uncertainty in the cost per additional live birth:
+deterministic sensitivity analysis}
+\label{fig:tornado}
+\includegraphics[width=0.88\textwidth]{media/media/image10.png}
+\caption*{\footnotesize\textit{Note:} Each bar shows the variation in
+cost per additional live birth when one parameter at a time is moved
+from its lower to its upper sensitivity bound
+(Table~\ref{tab:parameters}), holding all other parameters at
+base-case values. The utilisation rate ($u$) dominates: programme
+expenditure is fixed per freezer but births are a small fraction of
+freezers. The dashed vertical line shows the base-case estimate
+(\euro{}433,333); the dotted line shows the NFC break-even threshold
+(\euro{}91,391). Because no bar's lower bound dips below the NFC
+threshold, no single-parameter optimistic assumption is sufficient to
+achieve fiscal self-sustainability. Values in 2023 euros.\\
+\textit{Source:} Author's calculations.}
+\end{figure}
+
+\FloatBarrier
+
+Turning to the fiscal self-sustainability condition
+(Equation~\eqref{eq:fiscal}), at the inflation-adjusted NFC of
+\euro{}91,391 and holding $\alpha = 0.60$ and $s = 0.35$ at their
+upper plausible bounds, the break-even utilisation rate is
+$u \approx 0.30$---approximately 3.8 times the empirical average.
+Under the conservative 2006 NFC of \euro{}66,709 (without inflation
+adjustment), the required utilisation rises to $u \approx 0.43$, more
+than five times the observed average. The programme thus fails the
+fiscal self-sustainability condition on either price basis by a large
+margin at any empirically plausible parameter combination.
+
 \subsection{Budget impact}\label{sec:budget}
 
-It is estimated that Spain has approximately 1.8 million women aged
-30--35 \citep{ine2023}. Figure~\ref{fig:budget_scenarios} illustrates
-three uptake scenarios and the corresponding annual budgetary
-commitment. At 5\% uptake, nearly 90,000 women would freeze annually;
-at the stated vitrification cost of \euro{}5,000 per cycle, gross
-vitrification expenditure alone amounts to \euro{}450M per year. Adding
-expected thaw-and-transfer costs (approximately \euro{}18M, based on 8\%
-utilisation and \euro{}2,500 per cycle) and administration (\euro{}2M),
-annual programme costs total approximately \euro{}470M. Under a 10\%
-uptake scenario, annual costs reach approximately \euro{}938M; at 20\%
+Spain has approximately 1.8 million women aged 30--35
+\citep{ine2023}. At 5\% uptake, nearly 90,000 women would freeze
+annually; at the stated vitrification cost of \euro{}5,000 per cycle,
+gross vitrification expenditure alone amounts to \euro{}450M per year.
+Adding expected thaw-and-transfer costs (approximately \euro{}18M at
+8\% utilisation and \euro{}2,500 per cycle) and administration
+(\euro{}2M), annual programme costs total approximately \euro{}470M. At
+10\% uptake, annual costs reach approximately \euro{}938M; at 20\%
 uptake, they exceed \euro{}1.87Bn, equivalent to nearly 2.3\% of total
-Spanish public health expenditure \citep{minsan2024}. The costs of
-treating adverse events (Section~\ref{sec:adverse}) are excluded from
-these estimates and would add a further 5--8\% to direct procedure
-costs.
+Spanish public health expenditure \citep{minsan2024}. Adverse event
+costs (Section~\ref{sec:adverse}) are excluded and would add a further
+5--8\% to direct procedure costs.
 
-The scale of these budgetary commitments warrants explicit note. Spain
-currently spends around \euro{}1.9Bn each year on family and child
-policy \citep{oecd2024}. Comparative demographic evidence indicates
-that affordable childcare, wage-replacement parental leave, and housing
-support interventions tend to achieve stronger and more consistent
-effects on completed fertility compared to ART-based programmes
+\begin{figure}[htbp]
+\centering
+\caption{Annual programme cost under alternative uptake scenarios
+(2023 euros)}
+\label{fig:budget_scenarios}
+\includegraphics[width=0.88\textwidth]{media/media/image11.png}
+\caption*{\footnotesize\textit{Note:} Annual programme costs for three
+uptake scenarios among Spain's approximately 1.8 million women aged
+30--35 \citep{ine2023}. Costs include vitrification (\euro{}5,000 per
+cycle), expected thaw-and-transfer procedures (\euro{}2,500 per cycle,
+applied to 8\% of freezers), and administration. Adverse event costs
+are excluded and would add a further 5--8\%. The horizontal reference
+line marks Spain's current annual family and child policy expenditure
+of approximately \euro{}1.9Bn \citep{oecd2024}: even the minimum (5\%)
+scenario consumes roughly 25\% of that budget for a programme that
+fails fiscal self-sustainability under all parameter combinations.
+Values in 2023 euros.\\
+\textit{Source:} Author's calculations based on SEF (2024) and
+Ministerio de Sanidad (2024).}
+\end{figure}
+
+\FloatBarrier
+
+These figures warrant explicit comparison with alternative uses of
+public funds. Spain currently spends around \euro{}1.9Bn annually on
+family and child policy \citep{oecd2024}. Comparative demographic
+evidence indicates that affordable childcare, wage-replacement parental
+leave, and housing support interventions achieve stronger and more
+consistent effects on completed fertility than ART-based programmes
 \citep{gauthier2007,rindfuss2010}. Even the minimum (5\% uptake)
 scenario would consume approximately \euro{}470M per year---equivalent
 to roughly 25\% of Spain's entire annual family and child policy
 budget---for a programme whose cost per additional birth exceeds the
 per-birth net fiscal contribution under all empirically plausible
-parameter values. This opportunity cost should be a key factor in any
-cost-benefit consideration of the measure.
+parameter values.
 
-\subsection{Distributive analysis}\label{sec:distributive}
+\subsection{Distributional analysis and programme design}\label{sec:distributive}
 
-The distributive implications of public funding for elective OC depend
-on two factors: the economic profile of existing private users and the
-design of the public programme.
-Figure~\ref{fig:quintiles} shows estimated OC utilisation rates by
-income quintile in the current private market and under two public
-funding designs, calibrated on the access gradients documented by
-\citet{alonpinilla2021} and \citet{seiz2023}. The statistics expose a
-sharply pro-rich profile in the current private market: the estimated
-utilisation rate in the top income quintile is approximately fourteen
-times that of the bottom quintile. A universal public subsidy reduces
-this gradient but does not eliminate it, given that informational
-barriers, geographic access, and cultural attitudes towards ART are
-consistently associated with socioeconomic status. A means-tested
-subsidy allocated to women in income quintiles Q1--Q3 achieves a near
-neutral distribution of programme gains while substantially reducing
-the fiscal burden.
+The distributive implications of public funding depend on the economic
+profile of existing private users and the design of the public
+programme. Figure~\ref{fig:quintiles} shows estimated OC utilisation
+rates by income quintile under the current private market and two
+alternative public funding designs, calibrated on the access gradients
+documented by \citet{alonpinilla2021} and \citet{seiz2023}. The
+statistics expose a sharply pro-rich profile in the current private
+market: the estimated utilisation rate in the top income quintile is
+approximately fourteen times that of the bottom quintile, reflecting
+price barriers and informational inequalities that do not disappear
+with a universal subsidy.
 
-Figure~\ref{fig:concentration} shows stylised concentration curves
-\citep{kakwani1977} corresponding to each of the three designs. The
-private market yields a concentration index of approximately 0.42,
-strongly pro-rich, calibrated on Spanish income quintile shares (World
-Bank WDI 2023) and the empirically documented Q5/Q1 access gradient of
-14 \citep{alonpinilla2021}. Universal public funding reduces this
-index to approximately 0.18; means-tested funding approaches
-distributional neutrality (concentration index $\approx 0.05$). If the
-declared goal of public OC funding is to improve equity of access to
-reproductive technology, then a means-tested instrument is clearly
-preferable to a universal subsidy on both efficiency and equity
-grounds.
+\begin{figure}[htbp]
+\centering
+\caption{OC utilisation rates by income quintile: current private
+market and two public funding designs}
+\label{fig:quintiles}
+\includegraphics[width=0.88\textwidth]{media/media/image12.png}
+\caption*{\footnotesize\textit{Note:} Estimated annual OC utilisation
+rates (share of women in each income quintile who undergo
+vitrification) under three institutional arrangements, calibrated on
+the income gradients in ART access documented by
+\citet{alonpinilla2021} and \citet{seiz2023}. Under the current
+private market, the utilisation rate in the top quintile (Q5) is
+approximately fourteen times that of the bottom quintile (Q1).
+A universal public subsidy narrows the gradient substantially but
+does not eliminate it, because non-price barriers (geographic access,
+cultural attitudes) persist across the income distribution. A
+means-tested subsidy restricted to quintiles Q1--Q3 achieves a
+near-neutral distribution of programme gains at a substantially lower
+fiscal cost, making it the dominant instrument if equity of access is
+the declared policy objective.\\
+\textit{Source:} Author's calculations based on \citet{alonpinilla2021}
+and \citet{seiz2023}.}
+\end{figure}
 
-Three alternative institutional designs should also be assessed. First,
-direct public delivery through existing ART units---rather than a
-demand-side subsidy to private clinics---would integrate the programme
-with the existing governance and quality control regime in the SNS;
-however, with average waiting times of 339 days, expanding eligibility
-to elective OC without a matching capacity expansion would likely
-prolong waiting times for clinically indicated IVF. Second, a
-progressive co-payment system (analogous to Spain's pharmaceutical
-co-payment) could support partial cost recovery from higher-income
-users while preserving access for lower-income users. Third, a
-mandatory pre-treatment counselling session on age-specific success
-probabilities and the realistic likelihood of utilisation should be
-included in any design, given that prospective users consistently
-overestimate both parameters in the literature
-\citep{kynigopoulou2024,gambadauro2023}.
+\FloatBarrier
 
-\subsection{Adverse event costs}\label{sec:adverse}
+Figure~\ref{fig:concentration} formalises these comparisons through
+concentration curves \citep{kakwani1977}. The private market yields a
+concentration index of approximately 0.42, strongly pro-rich,
+calibrated on Spanish income quintile shares (World Bank WDI 2023) and
+the Q5/Q1 access gradient of 14 \citep{alonpinilla2021}. Universal
+public funding reduces this to approximately 0.18; means-tested
+funding approaches distributional neutrality (concentration index
+$\approx 0.05$). If the declared goal of public OC funding is to
+improve equity of reproductive access, a means-tested instrument is
+clearly preferable on both efficiency and equity grounds.
 
-Costs associated with adverse events should be included in any
-comprehensive cost estimate, though they are excluded from the
-base-case analysis. Ovarian hyperstimulation syndrome (OHSS) is the
-major risk of controlled ovarian stimulation: moderate OHSS occurs in
-3--6\% of stimulation cycles and severe OHSS requiring hospitalisation
-in 0.5--2\% \citep{luke2012,pai2021}. In the base scenario of 180,000
-cycles per year (10\% uptake), severe OHSS would generate
-approximately 900--3,600 hospitalisations per year, at an average cost
-of \euro{}3,500--8,000 per episode based on \citet{minsan2024} tariffs,
-implying an annual adverse event cost of \euro{}3M--29M above direct
-procedure costs. Follicular puncture complications occur in
-approximately 0.3\% of retrievals; at programme scale these are not
-negligible. A publicly funded programme should incorporate these
-externalities into its budget envelope from the outset.
+\begin{figure}[htbp]
+\centering
+\caption{Concentration curves for alternative OC programme designs}
+\label{fig:concentration}
+\includegraphics[width=0.88\textwidth]{media/media/image13.png}
+\caption*{\footnotesize\textit{Note:} The concentration curve
+\citep{kakwani1977} plots the cumulative share of programme benefits
+(vertical axis) against the cumulative share of the female population
+ranked by income (horizontal axis). A curve coinciding with the
+45-degree line indicates perfectly neutral distribution; curves below
+the diagonal indicate a pro-rich distribution. The private market
+(concentration index CI~$\approx$~0.42) distributes benefits strongly
+toward higher-income women. Universal public funding reduces the index
+to approximately 0.18, approaching but not reaching neutrality.
+Means-tested funding (CI~$\approx$~0.05) closely approximates
+distributional neutrality and is the preferred design on equity grounds.
+Calibration based on Spain's income distribution (World Bank WDI 2023)
+and the Q5/Q1 access gradient reported by \citet{alonpinilla2021}.\\
+\textit{Source:} Author's calculations based on \citet{alonpinilla2021},
+\citet{seiz2023}, and World Bank WDI (2023).}
+\end{figure}
 
-The long-run safety profile of children born from vitrified oocytes
-has not yet been fully quantified, since vitrification protocols were
-standardised only between 2006 and 2008 and long-term follow-up data
-are restricted to approximately 15 years. Present evidence does not
-show higher rates of congenital anomalies or adverse developmental
-outcomes compared to conventionally conceived children
-\citep{cobo2022,noyes2009}. However, existing evidence is not
-sufficiently powered to detect rare outcomes at the frequency that
-would become epidemiologically visible if a large public programme
-dramatically expanded the cohort of vitrification-conceived individuals.
-A publicly funded programme of the scale outlined here would essentially
-be a population-level experiment whose long-term safety data would not
-be available for two decades---an irreversibility that any precautionary
-policy analysis must consider.
+\FloatBarrier
 
-\subsection{Provider incentives}\label{sec:providers}
+Three alternative institutional designs should be assessed alongside
+income targeting. First, direct public delivery through existing ART
+units---rather than a demand-side subsidy to private clinics---would
+integrate the programme with the governance and quality control regime
+of the Spanish National Health System (SNS); however, with current
+average waiting times of 339 days, expanding eligibility to elective
+OC without a matching capacity expansion would likely delay access for
+clinically indicated IVF. Second, a progressive co-payment (analogous
+to Spain's pharmaceutical co-payment) could support partial cost
+recovery from higher-income users while preserving access for
+lower-income users. Third, any design should include mandatory
+pre-treatment counselling by an independent clinician on age-specific
+success probabilities and the realistic likelihood of utilisation, as
+prospective users consistently overestimate both parameters in the
+literature \citep{kynigopoulou2024,gambadauro2023}.
 
-The Spanish ART market is predominantly private: in 2021, approximately
-78\% of all ART cycles were undertaken in private institutions
-\citep{sef2024registro}. Private ART providers face a structural
-financial incentive to expand the uptake of elective OC, which is a
-high-margin, recurring-revenue service with relatively low marginal cost
-per additional patient in facilities already staffed to provide ovarian
-stimulation. The introduction of a public subsidy would expand the pool
-of solvent demand by reducing price barriers, directly increasing
-private-clinic revenues.
+\subsection{Adverse events, provider incentives, and the
+ICER}\label{sec:adverse}
 
-This creates a classic supplier-induced demand risk \citep{evans1974}.
+Costs associated with adverse events should be incorporated in any
+comprehensive budget estimate. Ovarian hyperstimulation syndrome (OHSS)
+is the major risk of controlled ovarian stimulation: moderate OHSS
+occurs in 3--6\% of stimulation cycles and severe OHSS requiring
+hospitalisation in 0.5--2\% \citep{luke2012,pai2021}. In the base
+scenario of 180,000 cycles per year (10\% uptake), severe OHSS would
+generate approximately 900--3,600 hospitalisations annually, at an
+average cost of \euro{}3,500--8,000 per episode based on
+\citet{minsan2024} tariffs, implying an annual adverse event cost of
+\euro{}3M--29M above direct procedure costs. Follicular puncture
+complications (${\sim}0.3\%$ of retrievals) are less frequent but not
+negligible at programme scale. Present evidence does not indicate higher
+rates of congenital anomalies or adverse developmental outcomes in
+vitrification-conceived children \citep{cobo2022,noyes2009}; however,
+existing data are not sufficiently powered to detect rare outcomes at
+the frequency that would become epidemiologically visible under a
+large-scale public programme, whose long-term safety data would not be
+available for two decades.
+
+The Spanish ART market is predominantly private: approximately 78\% of
+all ART cycles were undertaken in private institutions in 2021
+\citep{sef2024registro}. A demand-side subsidy would expand the pool
+of solvent demand, directly increasing private-clinic revenues.
 \citet{deonandan2012} document that ART providers systematically
 exaggerate the odds of successful treatment in counselling interactions,
 and that the marketing of elective OC tends to conflate the probability
-of having frozen oocytes with the probability of a live birth---a
-distinction that is highly consequential in practice. A demand-side
-subsidy channelled through private firms without price regulation,
-compulsory outcome disclosure, or independent counselling obligations
-would expose the public payer to moral hazard from both the supply side
-(demand created by providers) and the demand side (women who freeze but
-would never have used their oocytes, creating pure deadweight cost).
-The regulatory conditions to minimise these risks---tariff regulation,
-accreditation requirements, compulsory pre-treatment counselling by an
-independent clinician, public reporting of clinic-level outcomes
-disaggregated by age and number of oocytes---are absent from the
-current Spanish regulatory environment and from the PP policy proposal
-\citep{partidopopular2025}. Their absence is not a minor implementation
-detail but a structural flaw that would drive programme costs upward
-without improving outcomes.
+of frozen oocytes with the probability of a live birth---a distinction
+that is highly consequential in practice. A public subsidy channelled
+through private firms without price regulation, compulsory outcome
+disclosure, or independent counselling obligations would expose the
+public payer to supplier-induced demand \citep{evans1974} and to moral
+hazard from women who freeze but would never use their oocytes, creating
+pure deadweight cost. The regulatory conditions to minimise these
+risks---tariff regulation, accreditation requirements, compulsory
+pre-treatment counselling, public outcome reporting---are absent from
+the current Spanish regulatory environment and from the PP policy
+proposal \citep{partidopopular2025}.
 
-\subsection{Incremental cost-effectiveness ratio}\label{sec:icer}
-
-The analysis in the preceding sections is summarised by a single ICER,
-computed relative to the comparator of no public subsidy (status quo
-of private financing). The incremental cost is the net public
-expenditure per eligible woman under the proposed design; the
-incremental effectiveness is the expected additional live births
-attributable to the programme, controlling for demographic
-additionality. The base-case ICER for publicly funded elective OC is
-\euro{}433,333 per additional live birth, with a sensitivity range of
-\euro{}137,500 (optimistic) to above \euro{}1,000,000 (pessimistic).
-
-There is no established willingness-to-pay threshold for live births as
-a policy outcome in the Spanish health system, which operates on a
-quality-adjusted life year (QALY) framework with an implicit threshold
-of approximately \euro{}25,000--30,000 per QALY \citep{vallejotorres2018}.
-Applying QALY-value terminology requires assumptions on the
-quality-of-life benefit of an additional child to society and to
-parents; under the assumption of 20 full-quality life years per
-expected birth, the base-case cost of \euro{}433,333 per birth is
-equivalent to \euro{}21,667 per QALY, which lies within the
-conventional threshold. However, this calculation is dominated by the
-contested NFC projection and by the assumption of 20 full-quality life
-years---assumptions that are highly uncertain and sensitive to
-long-run macroeconomic conditions. Even where the QALY cost falls
-within the threshold range, publicly funded elective OC cannot be
-deemed justified on fiscal self-sustainability grounds at any
-empirically meaningful parameter value: the break-even utilisation
-rate under optimistic clinical assumptions is approximately 3.8 times
-the empirical average, and this condition is effectively unattainable
-under current realised parameters.
+The analysis is summarised by a single ICER, computed relative to the
+comparator of no public subsidy. The base-case ICER is \euro{}433,333
+per additional live birth, with a sensitivity range of \euro{}137,500
+(optimistic) to above \euro{}1,000,000 (pessimistic). The Spanish NHS
+framework operates on a quality-adjusted life year (QALY) basis with an
+implicit threshold of approximately \euro{}25,000--30,000 per QALY
+\citep{vallejotorres2018}. Under the assumption of 20 full-quality life
+years per expected birth, the base-case cost per birth is equivalent to
+\euro{}21,667 per QALY, which lies within the conventional threshold.
+However, this calculation rests on highly uncertain long-run
+macroeconomic projections; and even where the QALY cost falls within
+the threshold range, the programme cannot be deemed fiscally
+self-sustaining at any empirically meaningful parameter value: the
+break-even utilisation rate under optimistic clinical assumptions is
+approximately 3.8 times the empirical average. The QALY framing and
+the fiscal framing therefore point in different directions, and the
+latter is the more policy-relevant criterion for a programme explicitly
+motivated on pro-natalist fiscal grounds.
 
 % -----------------------------------------------------------------------
 \section{Discussion}\label{sec:discussion}
 % -----------------------------------------------------------------------
 
-This paper assessed whether publicly funded elective OC could raise
-medium-term fertility, satisfy a fiscal sustainability condition, and
-represent a cost-effective use of public expenditure relative to
-alternative policy instruments. The analysis addresses these objectives
-through two integrated components: an ITS design based on Spanish
-demographic data for 1976--2022 that characterises structural fertility
-dynamics and bounds the degree of demographic additionality required
-for programme feasibility, and a complete economic assessment
-comprising a decision-analytic cost model, ICER computation,
-sensitivity analysis, budget impact projections, and distributional
-analysis.
+This paper has conducted a decision-analytic economic evaluation of
+publicly funded elective OC as proposed in the Spanish national policy
+debate. The findings yield a consistent picture across all three
+dimensions examined.
 
-Age-specific effects reveal a sharp asymmetry with no evidence of
-complete compensation. Women aged 35--39 exhibited a post-break gap in
-ASFRs relative to the counterfactual that gradually narrowed and became
-slightly positive, indicating partial recovery consistent with delayed
-childbearing. By contrast, fertility at ages 40--44 remains permanently
-below its counterfactual trajectory after 2010. The absence of recovery
-at the oldest reproductive age intervals implies that postponement is
-only partially offset and that some fertility losses are not recovered---
-a pattern inconsistent with complete demographic additionality from an
-OC programme targeting the 30--35 age range. At the aggregate level,
-the structural break at $T_0 = 2010$ yields a significant level shift
-in adjTFR with no convergence toward the pre-break counterfactual,
-indicating not a short-run fluctuation but a structural change in the
-fertility regime.
+On cost-effectiveness, the analysis indicates that publicly funded
+elective OC is unlikely to become a self-sustaining financial process
+under empirically plausible utilisation and success rates. The gross
+fiscal return per euro spent (\euro{}0.21 in the base case) is well
+below break-even and dramatically below the \euro{}15.98 return
+estimated for clinical IVF by \citet{matorras2016}. The critical
+difference is that clinical IVF is provided to infertile couples for
+whom a live birth is genuinely additional; elective OC is provided to
+women who may well have conceived by other means, and most of whom will
+never use their stored oocytes. The low empirical utilisation rate
+(5--12\%) is therefore not a contingent implementation failure that
+improved programme design could remedy: it is a revealed preference
+signal that the option has value to users primarily as insurance, not
+as a pathway to a birth that would not otherwise have occurred.
 
-The economic assessment qualifies and extends these demographic
-findings in three significant respects. First, the cost-per-additional-birth
-analysis indicates that publicly funded elective OC is unlikely to
-become a self-sustaining financial process under empirically plausible
-utilisation and success rates. In the base case ($u = 0.08$,
-$s = 0.30$, $\alpha = 0.50$), the cost per extra live birth is
-approximately \euro{}433,333, compared with the inflation-adjusted NFC
-of an OC-conceived individual of \euro{}91,391 at 2023 prices (updated
-from the \citet{matorras2016} base case of \euro{}66,709 at 2006 prices
-using the INE IPCSNA deflator). The gross fiscal return per euro spent
-is therefore approximately \euro{}0.21---well below break-even and
-dramatically below the \euro{}15.98 return estimated for clinical IVF
-by \citet{matorras2016}. Under pessimistic but empirically verifiable
-utilisation rates ($u = 0.05$, $s = 0.20$), costs per birth exceed
-\euro{}1,025,000 and the fiscal return falls to approximately
-\euro{}0.09 per euro, implying a structural fiscal loss of more than
-\euro{}0.91 per euro of public expenditure. Second, the cost of a
-national programme would run to approximately \euro{}470M (5\% uptake)
-to over \euro{}1.87Bn (20\% uptake) per year, with adverse event costs
-not included in the direct procedure budget. Third, the distributional
-analysis demonstrates that a universal subsidy is moderately pro-rich,
-while a means-tested design targeting income quintiles Q1--Q3 achieves
-near distributional neutrality at a lower fiscal cost.
+On budget impact, the annual cost of a national programme would run to
+\euro{}470M at minimum (5\% uptake) and would exceed \euro{}1.87Bn at
+20\% uptake---a scale comparable to Spain's entire annual family and
+child policy budget, for a programme that fails the fiscal
+self-sustainability condition at all empirically meaningful parameter
+values.
 
-Three policy implications emerge. First, the benefits of publicly
-funded elective OC should not be justified on pro-natalist or fiscal
-sustainability grounds; the ITS evidence and cost model together suggest
-that such justification would require implausibly optimistic assumptions
-about both demographic impact and utilisation. If the policy moves
-forward, it should be articulated on autonomy and equity principles---
-reducing financial obstacles to a reproductive option that lower-income
-women currently cannot access---with full transparency regarding the
-low probability of future use and the only moderate increase in live
-birth probability. Second, any programme must include compulsory
-pre-treatment counselling by an independent clinician, public reporting
-of age- and oocyte-stratified success rates, and tariff regulation to
-discourage supplier-induced demand in the largely private ART market.
-Third, the \euro{}470M--1.87Bn annual cost of an OC subsidy programme
-should be compared against evidence-based pro-natalist policies such as
-affordable childcare and wage-replacement parental leave, which have
-better-documented demographic effectiveness and distributionally
-progressive effects \citep{gauthier2007,rindfuss2010}.
+On distribution, a universal subsidy is moderately pro-rich; a
+means-tested design targeting income quintiles Q1--Q3 achieves near
+distributional neutrality at a substantially lower fiscal cost.
 
-The findings suggest a near correspondence between
-postponement-facilitated reproductive technologies and aggregate
-fertility outcomes: policies that relax biological timing constraints
-in the absence of changing underlying fertility preferences are
-unlikely to counter structural low fertility or achieve equilibrium in
-fiscal settings. The salient issue of publicly funded OC is therefore
-redistribution and access in the interest of policy, not a
-pro-natalist mechanism to be deployed.
+Three policy implications follow. First, publicly funded elective OC
+should not be justified on pro-natalist or fiscal sustainability
+grounds; such justification would require implausibly optimistic
+assumptions about both programme uptake and demographic additionality.
+If the policy moves forward, it should be articulated on autonomy and
+equity principles---reducing financial barriers to a reproductive
+option that lower-income women currently cannot access---with full
+transparency about the low probability of future use and the moderate
+increase in live birth probability the technology provides.
+Second, any programme design must include compulsory pre-treatment
+counselling by an independent clinician, public reporting of age- and
+oocyte-stratified outcome data, and tariff regulation to discourage
+supplier-induced demand in the largely private ART market; the absence
+of these safeguards is a structural flaw, not a minor implementation
+detail. Third, the \euro{}470M--1.87Bn annual cost of an OC subsidy
+programme should be explicitly compared against evidence-based
+alternatives such as affordable childcare and wage-replacement parental
+leave, which have better-documented demographic effectiveness and
+distributionally progressive effects \citep{gauthier2007,rindfuss2010}.
+
+The salient issue of publicly funded OC is therefore redistribution
+and access in the interest of policy, not a pro-natalist fiscal
+instrument to be deployed.
 
 % =======================================================================
 % BIBLIOGRAPHICAL REFERENCES
@@ -924,11 +802,6 @@ pro-natalist mechanism to be deployed.
 \addcontentsline{toc}{section}{Bibliographical references}
 
 \begin{thebibliography}{99}
-
-\bibitem[Alberto et~al.(2002)]{alberto2002}
-Alberto, A., et~al. (2002). Guidelines for the use of resources
-belonging to the Spanish National Health System in assisted reproductive
-techniques. \emph{Revista Iberoamericana de Fertilidad}.
 
 \bibitem[Alon and Pinilla(2021)]{alonpinilla2021}
 Alon, I., \& Pinilla, J. (2021). Assisted reproduction in Spain,
@@ -945,8 +818,9 @@ aneuploidy considering ideal family size. \emph{Fertility and Sterility},
 118(5), 936--946.
 
 \bibitem[Blas(2025)]{blas2025}
-Blas, E. G. (2025, June 16). Feij\'oo hace un gu\~no progresista y
-plantea que el Estado pague la congelaci\'on de \'ovulos. \emph{El Pa\'is}.
+Blas, E. G. (2025, June 16). Feij\'oo hace un gu\~ino progresista y
+plantea que el Estado pague la congelaci\'on de \'ovulos. \emph{El
+Pa\'is}.
 
 \bibitem[Chronopoulou et~al.(2021)]{chronopoulou2021}
 Chronopoulou, E., Raperport, C., Sfakianakis, A., Srivastava, G., \&
@@ -1001,15 +875,6 @@ industrialized countries: A review of the literature. \emph{Population
 Research and Policy Review}, 26(3), 323--346. DOI:
 \nolinkurl{10.1007/s11113-007-9033-x}.
 
-\bibitem[Granger and Newbold(1974)]{grangernewbold1974}
-Granger, C. W. J., \& Newbold, P. (1974). Spurious regressions in
-econometrics. \emph{Journal of Econometrics}, 2(2), 111--120. DOI:
-\nolinkurl{10.1016/0304-4076(74)90034-7}.
-
-\bibitem[Instituto Max Weber(2012)]{imw2012}
-Instituto Max Weber. (2012). \emph{Proyecciones demogr\'aficas y
-sostenibilidad fiscal en Espa\~na}. Madrid.
-
 \bibitem[INE(2023)]{ine2023}
 Instituto Nacional de Estad\'istica. (2023). \emph{Population by age
 and sex: women aged 30--35 in Spain}. Madrid.
@@ -1061,10 +926,6 @@ BioMedicine \& Society Online}, 1, 113--122. DOI:
 Matorras Weinig, R. (2011). \emph{Libro blanco sociosanitario: la
 infertilidad en Espa\~na. Situaci\'on actual y perspectivas}. Madrid.
 
-\bibitem[MESS(2006)]{mess2006}
-Ministry of Employment and Social Security. (2006). \emph{Informe sobre
-sostenibilidad demogr\'afica y gasto social}. Madrid.
-
 \bibitem[Ministerio de Sanidad(2024)]{minsan2024}
 Ministerio de Sanidad. (2024). \emph{Estad\'istica de gasto sanitario
 p\'ublico}. Madrid.
@@ -1076,17 +937,11 @@ benefits of individuals conceived after IVF: a net tax evaluation in
 The Netherlands. \emph{Reproductive BioMedicine Online}, 28(2),
 239--245. DOI: \nolinkurl{10.1016/j.rbmo.2013.10.002}.
 
-\bibitem[National Research Council(2012)]{nrc2012}
-National Research Council. (2012). \emph{Aging and the macroeconomy:
-long-term implications of an older population}. Washington, DC:
-National Academies Press.
-
 \bibitem[Navarro Espigares et~al.(2006)]{navarro2006}
 Navarro Espigares, J. L., Mart\'inez Navarro, L., Castilla Alcal\'a,
 J. A., \& Hern\'andez Torres, E. (2006). Coste de las t\'ecnicas de
 reproducci\'on asistida en un hospital p\'ublico. \emph{Gaceta
-Sanitaria}, 20(5), 382--391. DOI:
-\nolinkurl{10.1157/13093207}.
+Sanitaria}, 20(5), 382--391. DOI: \nolinkurl{10.1157/13093207}.
 
 \bibitem[Noyes et~al.(2009)]{noyes2009}
 Noyes, N., Porcu, E., \& Borini, A. (2009). Over 900 oocyte
@@ -1107,10 +962,6 @@ Reproductive Sciences}, 14(4), 340--349. DOI:
 
 \bibitem[Partido Popular(2025)]{partidopopular2025}
 Partido Popular. (2025). \emph{Ponencia pol\'itica}.
-
-\bibitem[P\'erez-Camarero et~al.(2012)]{perezcamarero2012}
-P\'erez-Camarero, S., Hidalgo-Vera, A., \& colleagues. (2012).
-\emph{Demographic ageing and public finance sustainability in Spain}.
 
 \bibitem[Rindfuss et~al.(2010)]{rindfuss2010}
 Rindfuss, R. R., Guilkey, D. K., Morgan, S. P., \& Kravdal, \O.
@@ -1139,10 +990,6 @@ cryopreservation in European countries: Statutory background, practice,
 storage and use. \emph{Human Reproduction Open}, 2017(1), hox003. DOI:
 \nolinkurl{10.1093/hropen/hox003}.
 
-\bibitem[Stock and Watson(2020)]{stockwatson2020}
-Stock, J. H., \& Watson, M. W. (2020). \emph{Introduction to
-econometrics}. Pearson.
-
 \bibitem[Trokoudes et~al.(2011)]{trokoudes2011}
 Trokoudes, K. M., Pavlides, C., \& Zhang, X. (2011). Comparison outcome
 of fresh and vitrified donor oocytes in an egg-sharing donation program.
@@ -1153,11 +1000,6 @@ Vallejo-Torres, L., Garc\'ia-Lorenzo, B., \& Serrano-Aguilar, P.
 (2018). Estimating a cost-effectiveness threshold for the Spanish NHS.
 \emph{Health Economics}, 27(4), 746--761. DOI:
 \nolinkurl{10.1002/hec.3633}.
-
-\bibitem[World Bank(2025)]{worldbank2025}
-World Bank. (2025). \emph{World Development Indicators: Fertility rate,
-total (births per woman)}. Washington, DC. URL:
-\url{https://data.worldbank.org/indicator/SP.DYN.TFRT.IN}.
 
 \bibitem[Xunta de Galicia(2024)]{xunta2024}
 Presidencia de la Xunta de Galicia. (2024, November 4). Rueda anuncia
@@ -1175,442 +1017,5 @@ elective oocyte freezing: A retrospective observational study.
 
 \end{thebibliography}
 \endgroup
-
-% =======================================================================
-% APPENDICES
-% =======================================================================
-\clearpage
-\appendix
-
-% Reset equation numbering for appendices
-\setcounter{equation}{0}
-\renewcommand{\theequation}{A.\arabic{equation}}
-
-% -----------------------------------------------------------------------
-\section{Data and Estimation}\label{app:data}
-% -----------------------------------------------------------------------
-
-\subsection{Dataset description and
-preprocessing}\label{app:dataset}%
-\footnote{Replication materials for this study, including the code and
-data underlying the empirical analysis, are available at
-\url{https://github.com/alejandrocorchonfranco/reproeconomics}.}
-
-The empirical analysis is conducted on annual demographic and
-macroeconomic data for Spain derived from official sources (INE, World
-Bank, Human Fertility Database) and integrated into a single
-longitudinal dataset covering 1976 to 2022, providing 47 annual
-observations. For the macroeconomic series, World Bank data extend to
-2022 and are used without extrapolation. One possible issue with an
-annual macroeconomic time series of this length is non-stationarity,
-because integrating fertility and macroeconomic series of order one
-without cointegration testing risks generating spurious regressions
-\citep{grangernewbold1974}. Visual checks suggest that the adjTFR and
-female labour force participation series are borderline I(1) and GDP
-growth borderline I(0). The ITS specification alleviates some of these
-concerns by incorporating a deterministic linear trend, through which
-the effect of I(1) can be absorbed when the series is
-trend-stationary.
-
-The key demographic variables include the adjusted total fertility rate
-(adjTFR) and parity metrics (adjTFR1, adjTFR3plus). Age-specific
-fertility rates for women aged 35--39 (ASFR\_(35--39)) and 40--44
-(ASFR\_(40--44)) are included to capture delayed motherhood. The data
-contain a linear time trend (\texttt{time}), the binary break indicator
-(\texttt{intervention}) and the interaction term
-(\texttt{post\_intervention\_trend}) for identification of structural
-breaks. Macroeconomic covariates include the rate of real GDP growth
-per capita (\texttt{GDP\_Growth\_PC}), female labour force
-participation (\texttt{Female\_LFP}), and the youth unemployment rate
-(\texttt{Juvenile\_Unemployment\_Rate}). Due to data constraints, the
-latter two variables are observed for shorter subperiods and included
-in sensitivity specifications only. All variables are harmonised to
-annual frequency and aligned by calendar year; missing macroeconomic
-observations are excluded from specifications requiring those controls.
-
-\subsection{Linear ITS model and results}\label{app:linear}
-
-The magnitude of the post-break structural change is quantified by the
-coefficients associated with the break terms in
-Equation~\eqref{eq:its-model}, where $\beta_2$ measures the
-instantaneous level shift at the structural breakpoint and $\beta_3$
-captures the change in the slope of the outcome trajectory after the
-break. For any post-break period $t \geq T_0$, the estimated dynamic
-deviation from the counterfactual is
-
-\begin{equation}
-\widehat{\tau}_t = \widehat{\beta}_2 + \widehat{\beta}_3(t - T_0),
-\label{eq:dynamic-deviation}
-\end{equation}
-
-\noindent which represents the deviation of the observed outcome from
-its counterfactual path implied by the pre-break trend. The
-population regression representation and exogeneity assumption are,
-respectively,
-
-\begin{equation}
-Y_t = X_t^{\prime}\beta + u_t
-\label{eq:population-model}
-\end{equation}
-
-\begin{equation}
-E(u_t \mid X_t) = 0.
-\label{eq:exogeneity}
-\end{equation}
-
-Under the maintained exogeneity assumption, OLS yields unbiased and
-consistent estimators of $\beta$; inference uses HAC standard errors
-(lag~=~3) throughout.
-
-The regression output is presented in Table~\ref{tab:its-linear} (see
-tables at the end of the manuscript). Note that the time trend, the
-structural break level shift, and the post-break slope are
-statistically significant for most fertility outcomes, particularly for
-aggregate fertility (adjTFR), higher-order births (adjTFR3+), and
-ASFRs at older maternal ages. First-birth fertility (adjTFR1) shows
-weaker explanatory power and limited statistical significance across
-most coefficients, consistent with the interpretation that entry into
-motherhood is relatively rigid and less responsive to structural breaks
-and macroeconomic fluctuations.
-
-For aggregate fertility (adjTFR), the pre-break time trend is negative
-and highly significant ($\hat{\beta}_1 = -66.64$; $p<0.01$), confirming
-a pronounced secular decline prior to 2010. The level-shift coefficient
-at the structural break is also negative and significant
-($\hat{\beta}_2 = -1399.35$; $p<0.01$), indicating a sharp downward
-discontinuity at $T_0$. The post-break slope coefficient is positive
-and significant ($\hat{\beta}_3 = +45.23$; $p<0.01$), implying a
-deceleration of the long-run decline after 2010; however, since the
-positive post-break slope only partially offsets the initial level
-shift, adjTFR remains persistently below its pre-break counterfactual
-path throughout the post-2010 period. The coefficient magnitude of
-$-1399.35$ reflects units of the adjTFR series (expressed per 1,000
-women aged 15--49), which differs from the per-woman scale of ASFR and
-parity-specific series; cross-series magnitude comparisons require
-standardisation.
-
-GDP per capita growth is negatively and significantly associated with
-adjTFR ($\hat{\beta} = -18.47$; $p<0.01$), while female labour force
-participation displays a strong positive association
-($\hat{\beta} = +54.18$; $p<0.01$). The youth unemployment rate does
-not exhibit a statistically significant effect once other factors are
-controlled for.
-
-The asymmetry between age groups central to the calibration of $\alpha$
-is confirmed: ASFR at ages 35--39 shows a negative level shift
-($\hat{\beta}_2 = -0.057$; $p<0.01$) followed by a positive post-break
-slope ($\hat{\beta}_3 = +0.00170$; $p<0.01$), consistent with partial
-convergence toward the counterfactual. ASFR at ages 40--44 exhibits a
-similar level shift ($\hat{\beta}_2 = -0.041$; $p<0.01$) and positive
-post-break slope ($\hat{\beta}_3 = +0.00126$; $p<0.01$), but the slope
-correction is insufficient to close the gap with the counterfactual
-over the estimation horizon.
-
-\subsection{Logit ITS as a qualitative robustness check}\label{app:logit}
-
-To complement the linear ITS, a logit model is estimated for a binary
-indicator of low-fertility regime membership $Y_t^L$, equal to 1 when
-adjTFR falls within the low-fertility regime and 0 otherwise. The
-specification is
-
-\begin{equation}
-\Pr(Y_t^L = 1 \mid X_t) = \frac{\exp\!\left(\alpha_0 + \alpha_1 t +
-\alpha_2 D_t + \alpha_3 (t-T_0)D_t + \delta'X_t\right)}{1 +
-\exp\!\left(\alpha_0 + \alpha_1 t + \alpha_2 D_t +
-\alpha_3(t-T_0)D_t + \delta'X_t\right)}.
-\label{eq:logit-appendix}
-\end{equation}
-
-An important limitation of this specification is that the dependent
-variable is constructed endogenously from the same adjTFR series used
-in the linear ITS, creating a risk of circular identification. The
-near-perfect AUC (= 1.00) is consistent with quasi-complete separation
-driven by this circularity; goodness-of-fit statistics (Nagelkerke
-$R^2 = 0.988$) should be interpreted as evidence of near-deterministic
-classification within the estimation sample rather than robust
-out-of-sample predictive performance. The logit results are accordingly
-treated as a qualitative robustness check on the direction of the ITS
-finding, confirming a lower probability of observing high-fertility
-adjTFR outcomes after the structural break, consistent with the regime
-shift identified in the linear specification. They do not constitute an
-independent source of identification.
-
-% Reset figure counter for Appendix B
-\setcounter{figure}{0}
-\renewcommand{\thefigure}{B.\arabic{figure}}
-
-% Reset equation numbering for Appendix B
-\setcounter{equation}{0}
-\renewcommand{\theequation}{B.\arabic{equation}}
-
-% -----------------------------------------------------------------------
-\section{Decision-Tree Representation of the Cost Model}\label{app:decisiontree}
-% -----------------------------------------------------------------------
-
-This appendix presents a stylised decision tree of the economic logic
-underpinning the publicly funded elective OC programme analysed in the
-main text. The model, as described in
-Sections~\ref{sec:assumptions} and~\ref{sec:parameters}, combines
-behavioural parameters (uptake and utilisation rates) with clinical
-outcomes (success rates) to estimate the expected fiscal impact of the
-policy.
-
-The figure establishes the sequential structure within which the
-framework in Section~\ref{sec:benchmark} operates: eligibility in the
-target population, the choice to undergo vitrification, the probability
-of using stored oocytes, and the conditional probability of obtaining a
-live birth. These are the parameters used to interpret the estimated
-cost-effectiveness as presented in
-Sections~\ref{sec:cost-per-birth} and~\ref{sec:fiscal}.
-
-Figure~\ref{fig:decision_tree} clarifies how programme costs are
-incurred even when oocytes are never ultimately used, and that the
-fiscal break-even condition is jointly determined by behavioural and
-clinical margins. It should be treated as a schematic example of the
-analytic framework in Section~\ref{sec:budget}, not as a standalone
-empirical outcome.
-
-% =======================================================================
-% TABLES (after bibliographical references)
-% =======================================================================
-\clearpage
-
-% Reset table counter for Appendix A
-\setcounter{table}{0}
-\renewcommand{\thetable}{A.\arabic{table}}
-
-\begin{sidewaystable}[p]
-\centering
-\caption{Linear ITS estimates of fertility outcomes}
-\label{tab:its-linear}
-\begin{threeparttable}
-\footnotesize
-\setlength{\tabcolsep}{5pt}
-\renewcommand{\arraystretch}{1.28}
-\begin{adjustbox}{max width=\textwidth}
-\begin{tabular}{lcccccccc}
-\toprule
-Outcome & $N$ & $R^2$ & Time Trend ($\beta_1$) & Intervention
-($\beta_2$) & Post-Intervention Trend ($\beta_3$) & GDP Growth PC &
-Female LFP & Youth Unemployment \\
-\midrule
-adjTFR & 47 & 0.949 &
-\makecell[r]{$-66.64^{***}$\\(5.29)} &
-\makecell[r]{$-1399.35^{***}$\\(407.50)} &
-\makecell[r]{$+45.23^{***}$\\(9.26)} &
-\makecell[r]{$-18.47^{***}$\\(6.04)} &
-\makecell[r]{$+54.18^{***}$\\(11.61)} &
-\makecell[r]{0.82\\(2.74)} \\
-adjTFR1 & 47 & 0.539 &
-\makecell[r]{$-0.010$\\(0.006)} &
-\makecell[r]{0.45\\(0.41)} &
-\makecell[r]{$-0.010$\\(0.009)} &
-\makecell[r]{$-0.014^{**}$\\(0.006)} &
-\makecell[r]{0.006\\(0.013)} &
-\makecell[r]{0.000\\(0.003)} \\
-adjTFR3+ & 47 & 0.974 &
-\makecell[r]{$-0.042^{***}$\\(0.004)} &
-\makecell[r]{$-1.55^{***}$\\(0.21)} &
-\makecell[r]{$+0.046^{***}$\\(0.005)} &
-\makecell[r]{$-0.002$\\(0.002)} &
-\makecell[r]{$+0.039^{***}$\\(0.005)} &
-\makecell[r]{$-0.002$\\(0.001)} \\
-ASFR 35--39 & 47 & 0.949 &
-\makecell[r]{$-0.00177^{***}$\\(0.00031)} &
-\makecell[r]{$-0.057^{***}$\\(0.018)} &
-\makecell[r]{$+0.00170^{***}$\\(0.00044)} &
-\makecell[r]{$-0.00008$\\(0.00015)} &
-\makecell[r]{$+0.00385^{***}$\\(0.00047)} &
-\makecell[r]{$-0.00025^{**}$\\(0.00010)} \\
-ASFR 40--44 & 47 & 0.970 &
-\makecell[r]{$-0.00090^{***}$\\(0.00008)} &
-\makecell[r]{$-0.041^{***}$\\(0.005)} &
-\makecell[r]{$+0.00126^{***}$\\(0.00013)} &
-\makecell[r]{$-0.00003$\\(0.00005)} &
-\makecell[r]{$+0.00128^{***}$\\(0.00011)} &
-\makecell[r]{$-0.00005^{**}$\\(0.00003)} \\
-\bottomrule
-\end{tabular}
-\end{adjustbox}
-\begin{tablenotes}[flushleft]
-\footnotesize
-\item[a] HAC standard errors (lag = 3) are reported in parentheses.
-$^{***}p<0.01$, $^{**}p<0.05$, $^{*}p<0.10$.
-\item[b] The larger magnitude of the adjTFR coefficients reflects a
-difference in scale: adjTFR is expressed per 1,000 women aged 15--49,
-whereas adjTFR1 and adjTFR3+ are expressed as rates per woman.
-Cross-row comparisons of coefficient magnitude are therefore not
-meaningful without standardisation.
-\end{tablenotes}
-\end{threeparttable}
-\end{sidewaystable}
-
-% =======================================================================
-% FIGURES (after bibliographical references and tables)
-% =======================================================================
-\clearpage
-
-% Reset figure counter for main-text figures
-\setcounter{figure}{0}
-\renewcommand{\thefigure}{\arabic{figure}}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.88\textwidth]{media/media/image3.png}
-\caption{Pre-trend test for adjusted total fertility: observed versus
-predicted pre-intervention trajectory}
-\label{fig:pretrend}
-\caption*{\footnotesize\textit{Note:} The solid line shows the
-observed trajectory of adjTFR and the dashed line shows the estimated
-pre-break linear trend using only pre-2010 data. Close alignment
-supports the counterfactual assumption.\\
-\textit{Source:} Author's calculations based on INE and Human
-Fertility Database (1976--2022).}
-\end{figure}
-
-\clearpage
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.88\textwidth]{media/media/image2.png}
-\caption{Sensitivity of estimated structural-break coefficient to
-alternative candidate break-dates in the ITS model}
-\label{fig:break_sensitivity}
-\caption*{\footnotesize\textit{Note:} The figure reports the estimated
-level-shift coefficient ($\beta_2$) from the ITS specification under
-alternative candidate break-dates. Coefficients are plotted with
-corresponding confidence intervals.\\
-\textit{Source:} Author's calculations.}
-\end{figure}
-
-\clearpage
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.88\textwidth]{media/media/image4.png}
-\caption{Post-intervention gap in ASFRs, controlling for
-macroeconomic variables}
-\label{fig:asfr_gap}
-\caption*{\footnotesize\textit{Note:} The figure illustrates the
-estimated post-break gap in age-specific fertility rates for women
-aged 35--39 and 40--44, derived from the ITS specification including
-macroeconomic controls. The horizontal dashed line represents the null
-deviation (gap = 0), while the series capture the cumulative
-divergence from the pre-break counterfactual trajectory after $T_0 =
-2010$.\\
-\textit{Source:} Author's calculations based on INE and Human
-Fertility Database (1976--2022).}
-\end{figure}
-
-\clearpage
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.88\textwidth]{media/media/image9.png}
-\caption{Cost per additional birth and sensitivity to utilisation rate
-and success rate}
-\label{fig:cost_sensitivity}
-\caption*{\footnotesize\textit{Note:} Bidimensional sensitivity
-analysis of the cost per additional live birth over the plausible
-ranges of utilisation rate ($u$) and success rate per thaw cycle
-($s$), with demographic additionality parameter $\alpha = 0.50$.
-Values expressed in 2023 euros.\\
-\textit{Source:} Author's calculations.}
-\end{figure}
-
-\clearpage
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.88\textwidth]{media/media/image10.png}
-\caption{Deterministic sensitivity analysis of cost per additional
-birth}
-\label{fig:tornado}
-\caption*{\footnotesize\textit{Note:} Each horizontal bar shows the
-range of the cost per additional live birth obtained by varying one
-parameter at a time over its indicated interval while holding all
-other parameters at their base-case values. The dashed black vertical
-line denotes the base-case estimate (\euro{}433,333); the dotted blue
-vertical line denotes the NFC break-even threshold (\euro{}91,391).
-All values in 2023 euros.\\
-\textit{Source:} Author's calculations.}
-\end{figure}
-
-\clearpage
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.88\textwidth]{media/media/image11.png}
-\caption{Annual budgetary commitments under alternative uptake
-scenarios}
-\label{fig:budget_scenarios}
-\caption*{\footnotesize\textit{Note:} Annual programme costs (2023
-euros) under 5\%, 10\%, and 20\% uptake assumptions, including
-vitrification, thaw-and-transfer IVF, and administration costs.
-Adverse event costs are excluded.\\
-\textit{Source:} Author's calculations based on SEF (2024) and
-Ministerio de Sanidad (2024).}
-\end{figure}
-
-\clearpage
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.88\textwidth]{media/media/image12.png}
-\caption{Estimated OC utilisation rates by income quintile under
-alternative funding designs}
-\label{fig:quintiles}
-\caption*{\footnotesize\textit{Note:} OC utilisation rates by income
-quintile under three designs: the current private market, a universal
-public subsidy, and a means-tested subsidy (Q1--Q3). Calibrated on the
-access gradients reported by \citet{alonpinilla2021} and
-\citet{seiz2023}.\\
-\textit{Source:} Author's calculations based on Alon and Pinilla
-(2021) and Seiz et al. (2023).}
-\end{figure}
-
-\clearpage
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.88\textwidth]{media/media/image13.png}
-\caption{Concentration curves for programme distributive analysis}
-\label{fig:concentration}
-\caption*{\footnotesize\textit{Note:} Concentration curves for the
-three programme designs. The dashed 45-degree line represents perfect
-equality. A positive concentration index (CI) indicates a pro-rich
-distribution. The calibration is anchored to Spain's income
-distribution (World Bank, WDI 2023) and to the income gradient in
-private access reported by \citet{alonpinilla2021}: private market
-CI~$\approx$~0.42; universal subsidy CI~$\approx$~0.18; means-tested
-subsidy CI~$\approx$~0.05.\\
-\textit{Source:} Author's calculations based on Alon and Pinilla
-(2021), Seiz et al. (2023), and World Bank WDI (2023).}
-\end{figure}
-
-\clearpage
-
-% Appendix B figure -- reset numbering to B.1
-\setcounter{figure}{0}
-\renewcommand{\thefigure}{B.\arabic{figure}}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.88\textwidth]{media/media/image8.png}
-\caption{Decision-tree representation of the cost structure of a
-publicly funded elective OC programme}
-\label{fig:decision_tree}
-\caption*{\footnotesize\textit{Note:} A simplified decision tree
-modelling the expected fiscal cost per live birth under a publicly
-funded elective OC programme. The baseline scenario assumes an uptake
-rate of 8\%, a utilisation rate of 8\%, and a clinical success rate of
-30\%. Costs include the vitrification procedure (approximately
-\euro{}5,000 per patient) and the thaw-and-transfer IVF cycle
-(approximately \euro{}2,500). NFC refers to the net fiscal contribution
-per additional birth estimated in the main text. The fiscal break-even
-condition is achieved when the expected cost per live birth does not
-exceed the NFC (see Section~\ref{sec:fiscal}).\\
-\textit{Source:} Author's own elaboration.}
-\end{figure}
 
 \end{document}
